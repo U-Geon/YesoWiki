@@ -59,28 +59,62 @@
 - `<description>`은 한글 또는 영문으로 작성하되, **명령형**으로 씁니다 (예: "추가", "수정", "제거").
 - 본문(body)은 **왜(Why)** 변경했는지를 설명합니다. 무엇(What)은 코드가 말해줍니다.
 
-## 4. 브랜치 및 이슈 컨벤션 (Branch & Issue Convention)
+## 4. 브랜치 전략 및 이슈 컨벤션 (Git Flow & Issue Convention)
 
-> 상세 규칙은 `.agents/skills/issue-workflow.md`를 참조하세요.
+> 상세 이슈 규칙은 `.agents/skills/issue-workflow.md`를 참조하세요.
 
-### 브랜치 명명
+### 4.1. Git Flow 브랜치 전략
+
+이 프로젝트는 **Git Flow** 전략을 채택합니다.
+
+```
+main ──────────────────────────────────────── (운영 서버 / Vercel Production)
+  ↑ Merge (PR + 승인 필수)
+develop ────────────────────────────────────── (개발 서버 / Vercel Preview)
+  ↑ Merge (PR)       ↑ Merge (PR)
+feat/xxx          fix/xxx        chore/xxx ...
+```
+
+| 브랜치 | 역할 | 배포 환경 | 직접 Push |
+|--------|------|-----------|----------|
+| `main` | 최종 릴리즈, 운영 버전 | Vercel **Production** | ❌ 금지 |
+| `develop` | 기능 통합 및 QA | Vercel **Preview** | ❌ 금지 |
+| `feat/*` | 새 기능 개발 | 로컬 | ✅ 허용 |
+| `fix/*` | 버그 수정 | 로컬 | ✅ 허용 |
+| `hotfix/*` | 운영 긴급 수정 | 로컬 | ✅ 허용 |
+| `chore/*` | 설정/인프라/문서 | 로컬 | ✅ 허용 |
+
+### 4.2. 병합 규칙 (Merge Rules)
+
+- **`feat/*` → `develop`**: PR 생성 → CI 통과 → 머지 (Squash Merge 권장)
+- **`develop` → `main`**: PR 생성 → CI 통과 → 릴리즈 준비 완료 시 머지
+- **`hotfix/*` → `main` + `develop`**: 운영 장애 발생 시에만 허용. 머지 후 반드시 `develop`에도 반영.
+
+> [!IMPORTANT]
+> `main`과 `develop`은 GitHub Branch Protection Rule로 보호합니다.
+> 직접 push는 불가하며, 반드시 PR을 통해 병합해야 합니다.
+
+### 4.3. 작업 브랜치 명명
 ```
 <type>/<plan-id>-<kebab-case-설명>
 ```
-| 타입 | 용도 | 예시 |
-|------|------|------|
-| `feat/` | 새 기능 | `feat/002-wiki-crud` |
-| `fix/` | 버그 수정 | `fix/010-xss-vulnerability` |
-| `chore/` | 인프라/설정 | `chore/011-ci-pipeline` |
-| `docs/` | 문서 작업 | `docs/012-api-reference` |
+| 타입 | 용도 | 베이스 브랜치 | 예시 |
+|------|------|-------------|------|
+| `feat/` | 새 기능 | `develop` | `feat/002-wiki-crud` |
+| `fix/` | 버그 수정 | `develop` | `fix/010-xss-bug` |
+| `hotfix/` | 운영 긴급 패치 | `main` | `hotfix/critical-auth-error` |
+| `chore/` | 인프라/설정 | `develop` | `chore/011-ci-pipeline` |
+| `docs/` | 문서 작업 | `develop` | `docs/012-api-reference` |
 
-### 이슈 제목
+### 4.4. 이슈 및 Plan 컨벤션
+
+**이슈 제목 형식**
 ```
 [Phase N] <기능 설명>
 ```
 예: `[Phase 1] 위키 문서 CRUD 기능 구현`
 
-### Plan 파일명
+**Plan 파일명 형식**
 ```
 {순번 3자리}-{kebab-case 설명}.md
 ```
