@@ -1,0 +1,134 @@
+name: Sync Plans to GitHub Issues
+
+on:
+  push:
+    paths:
+      - 'plans/*.md'
+    branches:
+      - main
+
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  sync-plans:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sync plan files to GitHub Issues & Branches
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const plansDir = 'plans';
+            const files = fs.readdirSync(plansDir)
+              .filter(f => f.endsWith('.md') && f !== 'TEMPLATE.md');
+
+            for (const file of files) {
+              const content = fs.readFileSync(path.join(plansDir, file), 'utf8');
+
+              // Parse YAML frontmatter
+              const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+              if (!fmMatch) continue;
+
+              const frontmatter = fmMatch[1];
+              const body = content.slice(fmMatch[0].length).trim();
+
+              // Extract fields
+              const getField = (key) => {
+                const match = frontmatter.match(new RegExp(`^${key}:\\s*"?(.+?)"?\\s*$`, 'm'));
+                return match ? match[1].trim() : '';
+              };
+              const getArrayField = (key) => {
+                const match = frontmatter.match(new RegExp(`^${key}:\\s*\\[(.*)\\]`, 'm'));
+                if (!match) return [];
+                return match[1].split(',')
+                  .map(s => s.trim().replace(/"/g, ''))
+                  .filter(Boolean);
+              };
+
+              const id = getField('id');
+              const title = getField('title');
+              const status = getField('status');
+              const labels = getArrayField('labels');
+              const assignee = getField('assignee');
+              const branch = getField('branch');
+
+              if (!title) {
+                console.log(`Skipping ${file}: no title`);
+                continue;
+              }
+
+              // Check existing issues
+              const existing = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'all',
+                per_page: 100,
+              });
+              const found = existing.data.find(i => i.title === title);
+
+              const issueBody = [
+                `<!-- plan-id: ${id} -->`,
+                '',
+                body,
+                '',
+                '---',
+                `📁 **Plan**: \`plans/${file}\``,
+                branch ? `🌿 **Branch**: \`${branch}\`` : '',
+              ].filter(Boolean).join('\n');
+
+              if (found) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: found.number,
+                  title,
+                  body: issueBody,
+                  labels,
+                  state: status === 'done' ? 'closed' : 'open',
+                });
+                console.log(`✅ Updated issue #${found.number}: ${title}`);
+              } else if (status !== 'done') {
+                const created = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title,
+                  body: issueBody,
+                  labels,
+                  ...(assignee ? { assignees: [assignee] } : {}),
+                });
+                console.log(`🆕 Created issue #${created.data.number}: ${title}`);
+
+                // Auto-create branch
+                if (branch) {
+                  try {
+                    const mainRef = await github.rest.git.getRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: 'heads/main',
+                    });
+                    await github.rest.git.createRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: `refs/heads/${branch}`,
+                      sha: mainRef.data.object.sha,
+                    });
+                    console.log(`🌿 Created branch: ${branch}`);
+                  } catch (e) {
+                    console.log(`⚠️ Branch ${branch} already exists or error: ${e.message}`);
+                  }
+                }
+              }
+            }
