@@ -1,7 +1,7 @@
 ---
 id: "004-auth-system"
 title: "[Phase 2] 사용자 인증 시스템 구현"
-status: "backlog"
+status: "cancelled"
 priority: "medium"
 labels: ["feature", "security", "backend"]
 assignee: ""

@@ -91,11 +91,12 @@ src/app/
 
 ```
 createDocument(formData)
-  1. title, content 추출 및 trim
+  1. title, content, editorName(선택) 추출 및 trim
   2. 유효성 검사 (빈 값, 중복 title)
-  3. db.document.create({ data: { title, content, authorId } })
-  4. revalidatePath('/wiki')
-  5. redirect(`/wiki/${encodeURIComponent(title)}`)
+  3. editorIp를 요청 헤더(x-forwarded-for / headers())에서 추출
+  4. db.document.create({ data: { title, content, editorIp, editorName } })
+  5. revalidatePath('/wiki')
+  6. redirect(`/wiki/${encodeURIComponent(title)}`)
 ```
 
 ---
@@ -113,13 +114,14 @@ createDocument(formData)
 
 ```
 updateDocument(formData)
-  1. documentId, newContent 추출
-  2. 기존 document 조회 (없으면 notFound)
-  3. Prisma 트랜잭션:
-     a. DocumentHistory.create (기존 content 백업)
-     b. Document.update (새 content로 교체)
-  4. revalidatePath(`/wiki/${title}`)
-  5. redirect(`/wiki/${title}`)
+  1. documentId, newContent, editorName(선택) 추출
+  2. editorIp를 요청 헤더에서 추출
+  3. 기존 document 조회 (없으면 notFound)
+  4. Prisma 트랜잭션:
+     a. DocumentHistory.create (기존 content + 기존 editorIp/editorName 백업)
+     b. Document.update (새 content, editorIp, editorName으로 교체)
+  5. revalidatePath(`/wiki/${title}`)
+  6. redirect(`/wiki/${title}`)
 ```
 
 > [!WARNING]
@@ -134,7 +136,7 @@ updateDocument(formData)
 |------|------|
 | 컴포넌트 타입 | Server Component |
 | 데이터 소스 | `db.documentHistory.findMany({ where: { documentId }, orderBy: { createdAt: 'desc' } })` |
-| 표시 항목 | 수정 일시, 수정자 이름, 내용 미리보기(앞 100자) |
+| 표시 항목 | 수정 일시, 편집자 IP/닉네임, 내용 미리보기(앞 100자) |
 
 ---
 
@@ -152,8 +154,9 @@ updateDocument(formData)
 
 ## 4. 보안 체크리스트 (Reviewer 필수 확인)
 
-- [ ] 모든 사용자 입력(`title`, `content`)은 서버에서 trim + 유효성 검사 수행
+- [ ] 모든 사용자 입력(`title`, `content`, `editorName`)은 서버에서 trim + 유효성 검사 수행
 - [ ] 마크다운 렌더링 시 `rehype-sanitize` 적용 (스크립트 태그, 이벤트 핸들러 제거)
-- [ ] `authorId`는 클라이언트가 아닌 **서버 세션**에서 가져옴 (Phase 2 인증 도입 후)
+- [ ] `editorIp`는 클라이언트가 아닌 **서버의 `headers()` 함수**에서 추출 (위조 방지)
 - [ ] Prisma 쿼리는 모두 파라미터화된 쿼리 사용 (ORM 기본 동작, SQL Injection 방지)
 - [ ] `Document.title` 중복 시 Prisma `P2002` 에러를 catch하여 사용자 친화적 메시지 반환
+- [ ] 반달리즘(문서 훼손) 대응: DocumentHistory를 통한 이전 버전 복원 기능이 동작해야 함

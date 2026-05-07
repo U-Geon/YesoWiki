@@ -45,10 +45,10 @@ cp .env.example .env
 DATABASE_URL="mysql://root:password@localhost:3306/yesowiki"
 
 # DB 스키마 동기화 (개발 환경에서는 db push 사용)
-pnpm dlx prisma db push
+pnpm prisma db push
 
 # Prisma Studio로 데이터 확인 (선택)
-pnpm dlx prisma studio
+pnpm prisma studio
 ```
 
 ### 3.2. 클라우드 DB (Supabase - PostgreSQL, 권장)
@@ -70,7 +70,7 @@ datasource db {
 DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
 
 # 스키마 동기화
-pnpm dlx prisma db push
+pnpm prisma db push
 ```
 
 ---
@@ -116,9 +116,9 @@ chore(ci): Vercel 빌드 스크립트 최적화
 | `pnpm build` | 프로덕션 빌드 (Prisma generate 포함) |
 | `pnpm lint` | ESLint 검사 |
 | `pnpm tsc --noEmit` | TypeScript 타입 검사 |
-| `pnpm dlx prisma studio` | DB 데이터 GUI 확인 |
-| `pnpm dlx prisma db push` | 스키마 변경사항 DB에 반영 |
-| `pnpm dlx prisma generate` | Prisma Client 수동 재생성 |
+| `pnpm prisma studio` | DB 데이터 GUI 확인 |
+| `pnpm prisma db push` | 스키마 변경사항 DB에 반영 |
+| `pnpm prisma generate` | Prisma Client 수동 재생성 |
 
 ---
 
@@ -152,7 +152,7 @@ YesoWiki/
 ### `@prisma/client is not found` 에러
 
 ```bash
-pnpm dlx prisma generate
+pnpm prisma generate
 ```
 
 ### TypeScript 에러 - `Cannot find module 'next'`
@@ -164,5 +164,5 @@ pnpm install
 ### Prisma 스키마와 DB 상태 불일치
 
 ```bash
-pnpm dlx prisma db push --force-reset  # ⚠️ 데이터 초기화 주의
+pnpm prisma db push --force-reset  # ⚠️ 데이터 초기화 주의
 ```
