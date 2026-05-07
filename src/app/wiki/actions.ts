@@ -98,6 +98,7 @@ export async function updateDocument(prevState: PrevState, formData: FormData): 
     return { error: '문서 수정 중 오류가 발생했습니다.' }
   }
 
+  revalidatePath('/wiki')
   revalidatePath(`/wiki/${encodeURIComponent(existingTitle)}`)
   redirect(`/wiki/${encodeURIComponent(existingTitle)}`)
 }
