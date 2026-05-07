@@ -29,3 +29,13 @@
 - **성능 (Performance)**: Next.js의 Server Components와 Fetch 캐싱을 적극 활용하여 초기 로딩 속도와 SEO(내부망이라도 구조적 이점)를 최적화합니다.
 - **확장성 (Scalability)**: Prisma ORM을 사용하여 향후 데이터 구조 변경 및 DB 마이그레이션이 용이해야 합니다.
 - **배포 (Deployment)**: Vercel 환경에서 무중단으로 CI/CD가 이루어져야 하며, Vercel Edge Cache 등과 호환되어야 합니다.
+- **데이터베이스**: 배포 환경에서는 **Supabase(PostgreSQL)**를 사용합니다. (`prisma/schema.prisma` provider 참조)
+
+## 4. 관련 문서 (Docs Index)
+
+| 문서 | 내용 |
+|------|------|
+| [ERD.md](./ERD.md) | 데이터 모델 및 엔티티 관계 다이어그램 |
+| [FEATURE_SPEC.md](./FEATURE_SPEC.md) | 라우트 구조, Server Action 흐름, 컴포넌트 명세 |
+| [SETUP.md](./SETUP.md) | 로컬 개발 환경 세팅 가이드 |
+
