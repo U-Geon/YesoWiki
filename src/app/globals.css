@@ -1,21 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0f1117;
+  --bg-card: #1a1d2e;
+  --bg-elevated: #242840;
+  --border: #2e3150;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-muted: #1e1f3b;
+  --text-primary: #e8eaf6;
+  --text-secondary: #9094b0;
+  --text-muted: #5a5f7a;
+  --green: #4ade80;
+  --red: #f87171;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* ─── 마크다운 렌더링 스타일 ─────────────────────────── */
+.wiki-content {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text-primary);
+}
+
+.wiki-content h1,
+.wiki-content h2,
+.wiki-content h3,
+.wiki-content h4 {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #c7d0ff;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+
+.wiki-content h1 { font-size: 1.8rem; }
+.wiki-content h2 { font-size: 1.4rem; }
+.wiki-content h3 { font-size: 1.15rem; }
+
+.wiki-content p {
+  margin-bottom: 1rem;
+}
+
+.wiki-content a {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-muted);
+  transition: color 0.15s;
+}
+
+.wiki-content a:hover {
+  color: #fff;
+}
+
+.wiki-content code {
+  background: var(--bg-elevated);
+  color: #a5f3fc;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.wiki-content pre {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+
+.wiki-content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.wiki-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--text-secondary);
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.wiki-content ul,
+.wiki-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.wiki-content li {
+  margin-bottom: 0.25rem;
+}
+
+.wiki-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.wiki-content th,
+.wiki-content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.wiki-content th {
+  background: var(--bg-elevated);
+  color: var(--accent-hover);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.wiki-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* ─── 스켈레톤 애니메이션 ─────────────────────────────── */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.skeleton {
+  background: var(--bg-elevated);
+  border-radius: 6px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
