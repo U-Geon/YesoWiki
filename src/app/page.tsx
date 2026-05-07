@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { db } from '@/lib/prisma'
 
 export const metadata: Metadata = {
@@ -52,7 +53,7 @@ export default async function HomePage() {
           marginBottom: '4rem',
         }}
       >
-        <a
+        <Link
           href="/wiki"
           style={{
             background: 'var(--bg-card)',
@@ -67,8 +68,8 @@ export default async function HomePage() {
           }}
         >
           문서 목록 보기 →
-        </a>
-        <a
+        </Link>
+        <Link
           href="/wiki/new"
           style={{
             background: 'var(--accent)',
@@ -81,7 +82,7 @@ export default async function HomePage() {
           }}
         >
           + 새 문서 작성
-        </a>
+        </Link>
       </div>
 
       <div

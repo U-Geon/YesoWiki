@@ -5,9 +5,17 @@ import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { db } from '@/lib/prisma'
 
+export interface PrevState {
+  error?: string
+}
+
+export interface ActionResult {
+  error?: string
+}
+
 // ─── 문서 생성 ────────────────────────────────────────────────────────────────
 
-export async function createDocument(prevState: any, formData: FormData) {
+export async function createDocument(prevState: PrevState, formData: FormData): Promise<ActionResult> {
   const title = (formData.get('title') as string)?.trim()
   const content = (formData.get('content') as string)?.trim()
   const editorName = (formData.get('editorName') as string)?.trim() || null
@@ -16,11 +24,11 @@ export async function createDocument(prevState: any, formData: FormData) {
   if (!title) return { error: '문서 제목은 필수입니다.' }
   if (!content) return { error: '문서 내용은 필수입니다.' }
 
-  // 서버에서 IP 추출 (클라이언트 위조 불가)
+  // 서버에서 IP 추출 (x-real-ip 우선, 그 다음 x-forwarded-for의 가장 우측 값)
   const headersList = await headers()
   const editorIp =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     headersList.get('x-real-ip') ??
+    headersList.get('x-forwarded-for')?.split(',').pop()?.trim() ??
     'unknown'
 
   try {
@@ -41,39 +49,55 @@ export async function createDocument(prevState: any, formData: FormData) {
 
 // ─── 문서 수정 ────────────────────────────────────────────────────────────────
 
-export async function updateDocument(prevState: any, formData: FormData) {
-  const documentId = Number(formData.get('documentId'))
+export async function updateDocument(prevState: PrevState, formData: FormData): Promise<ActionResult> {
+  const rawDocumentId = formData.get('documentId')
+  if (!rawDocumentId || rawDocumentId === '') {
+    return { error: '잘못된 요청입니다.' }
+  }
+  
+  const documentId = Number(rawDocumentId)
+  if (!Number.isInteger(documentId) || documentId <= 0) {
+    return { error: '잘못된 요청입니다.' }
+  }
+
   const newContent = (formData.get('content') as string)?.trim()
   const editorName = (formData.get('editorName') as string)?.trim() || null
 
   if (!newContent) return { error: '문서 내용은 필수입니다.' }
-  if (isNaN(documentId)) return { error: '잘못된 요청입니다.' }
 
   const headersList = await headers()
   const editorIp =
-    headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     headersList.get('x-real-ip') ??
+    headersList.get('x-forwarded-for')?.split(',').pop()?.trim() ??
     'unknown'
 
-  const existing = await db.document.findUnique({ where: { id: documentId } })
-  if (!existing) return { error: '문서를 찾을 수 없습니다.' }
+  let existingTitle = ''
+  try {
+    const existing = await db.document.findUnique({ where: { id: documentId } })
+    if (!existing) return { error: '문서를 찾을 수 없습니다.' }
+    
+    existingTitle = existing.title
 
-  // 트랜잭션: 히스토리 백업 → 본문 업데이트 (원자적 실행)
-  await db.$transaction([
-    db.documentHistory.create({
-      data: {
-        documentId: existing.id,
-        content: existing.content,
-        editorIp: existing.editorIp,
-        editorName: existing.editorName,
-      },
-    }),
-    db.document.update({
-      where: { id: documentId },
-      data: { content: newContent, editorIp, editorName },
-    }),
-  ])
+    // 트랜잭션: 히스토리 백업 → 본문 업데이트 (원자적 실행)
+    await db.$transaction([
+      db.documentHistory.create({
+        data: {
+          documentId: existing.id,
+          content: existing.content,
+          editorIp: existing.editorIp,
+          editorName: existing.editorName,
+        },
+      }),
+      db.document.update({
+        where: { id: documentId },
+        data: { content: newContent, editorIp, editorName },
+      }),
+    ])
+  } catch (error) {
+    console.error('Failed to update document:', error)
+    return { error: '문서 수정 중 오류가 발생했습니다.' }
+  }
 
-  revalidatePath(`/wiki/${encodeURIComponent(existing.title)}`)
-  redirect(`/wiki/${encodeURIComponent(existing.title)}`)
+  revalidatePath(`/wiki/${encodeURIComponent(existingTitle)}`)
+  redirect(`/wiki/${encodeURIComponent(existingTitle)}`)
 }
