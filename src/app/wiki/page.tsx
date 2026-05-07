@@ -75,7 +75,7 @@ export default async function WikiListPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {documents.map((doc) => {
-            const editor = doc.editorName ?? doc.editorIp?.slice(0, 8) + '...' ?? '익명'
+            const editor = doc.editorName ?? (doc.editorIp ? doc.editorIp.slice(0, 8) + '...' : '익명')
             const updatedAt = new Date(doc.updatedAt).toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: 'long',

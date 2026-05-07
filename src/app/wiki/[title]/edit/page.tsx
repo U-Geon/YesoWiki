@@ -8,7 +8,12 @@ interface Props {
 
 export default async function EditPage({ params }: Props) {
   const { title } = params
-  const decodedTitle = decodeURIComponent(title)
+  let decodedTitle = ''
+  try {
+    decodedTitle = decodeURIComponent(title)
+  } catch (error) {
+    notFound()
+  }
 
   const doc = await db.document.findUnique({
     where: { title: decodedTitle },

@@ -10,13 +10,23 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { title } = params
-  const decodedTitle = decodeURIComponent(title)
+  let decodedTitle = title
+  try {
+    decodedTitle = decodeURIComponent(title)
+  } catch (error) {
+    // metadata generation fallback
+  }
   return { title: decodedTitle }
 }
 
 export default async function WikiDetailPage({ params }: Props) {
   const { title } = params
-  const decodedTitle = decodeURIComponent(title)
+  let decodedTitle = ''
+  try {
+    decodedTitle = decodeURIComponent(title)
+  } catch (error) {
+    notFound()
+  }
 
   const doc = await db.document.findUnique({
     where: { title: decodedTitle },

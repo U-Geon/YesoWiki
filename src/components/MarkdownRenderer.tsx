@@ -1,4 +1,4 @@
-'use client'
+// MarkdownRenderer is server-safe
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
