@@ -31,6 +31,7 @@
 ## 🛠 Getting Started
 
 ### 1. 저장소 클론 및 패키지 설치
+
 ```bash
 git clone https://github.com/U-Geon/YesoWiki.git
 cd YesoWiki
@@ -38,17 +39,20 @@ pnpm install
 ```
 
 ### 2. 환경변수 설정
+
 ```bash
 cp .env.example .env
 # .env 파일을 열어 DATABASE_URL을 본인의 MySQL 접속 정보로 수정하세요.
 ```
 
 ### 3. 데이터베이스 마이그레이션
+
 ```bash
 pnpm dlx prisma db push
 ```
 
 ### 4. 로컬 개발 서버 실행
+
 ```bash
 pnpm dev
 ```
