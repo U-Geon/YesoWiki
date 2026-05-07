@@ -4,10 +4,15 @@ import { db } from '@/lib/prisma'
 export const metadata: Metadata = { title: '문서 목록' }
 
 export default async function WikiListPage() {
-  const documents = await db.document.findMany({
+  const rawDocuments = await db.document.findMany({
     orderBy: { updatedAt: 'desc' },
     select: { id: true, title: true, updatedAt: true, editorName: true, editorIp: true },
   })
+
+  const documents = rawDocuments.map(({ editorIp, ...doc }) => ({
+    ...doc,
+    editorAlias: doc.editorName ?? (editorIp ? editorIp.slice(0, 8) + '...' : '익명')
+  }))
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
@@ -75,7 +80,7 @@ export default async function WikiListPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {documents.map((doc) => {
-            const editor = doc.editorName ?? (doc.editorIp ? doc.editorIp.slice(0, 8) + '...' : '익명')
+            const editor = doc.editorAlias
             const updatedAt = new Date(doc.updatedAt).toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: 'long',
