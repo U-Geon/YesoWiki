@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { db } from '@/lib/prisma'
-import { parseBacklinks } from '@/lib/backlink'
+import { parseBacklinksWithExistence } from '@/lib/backlink'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
 
 interface Props {
@@ -30,11 +31,21 @@ export default async function WikiDetailPage({ params }: Props) {
 
   const doc = await db.document.findUnique({
     where: { title: decodedTitle },
+    include: {
+      incomingLinks: {
+        include: { source: { select: { id: true, title: true } } },
+        orderBy: { source: { title: 'asc' } },
+      },
+    },
   })
 
   if (!doc) notFound()
 
-  const contentWithBacklinks = parseBacklinks(doc.content)
+  // 본문 내 [[링크]] 렌더링을 위해 현재 DB에 존재하는 문서 제목 집합 조회
+  const allTitles = await db.document.findMany({ select: { title: true } })
+  const existingTitles = new Set(allTitles.map((d) => d.title))
+
+  const contentWithBacklinks = parseBacklinksWithExistence(doc.content, existingTitles)
   const editor = doc.editorName ?? '익명'
   const updatedAt = new Date(doc.updatedAt).toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -109,6 +120,51 @@ export default async function WikiDetailPage({ params }: Props) {
 
       {/* 마크다운 본문 */}
       <MarkdownRenderer content={contentWithBacklinks} />
+
+      {/* 백링크 목록 */}
+      {doc.incomingLinks.length > 0 && (
+        <div
+          style={{
+            marginTop: '3rem',
+            paddingTop: '1.5rem',
+            borderTop: '1px solid var(--border)',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '0.9rem',
+              fontWeight: 600,
+              color: 'var(--text-muted)',
+              marginBottom: '0.75rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            이 문서를 참조하는 문서 ({doc.incomingLinks.length})
+          </h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {doc.incomingLinks.map((link) => (
+              <Link
+                key={link.id}
+                href={`/wiki/${encodeURIComponent(link.source.title)}`}
+                style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-secondary)',
+                  textDecoration: 'none',
+                  padding: '0.3rem 0.75rem',
+                  borderRadius: '6px',
+                  fontSize: '0.85rem',
+                  transition: 'border-color 0.15s',
+                }}
+              >
+                {link.source.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
+

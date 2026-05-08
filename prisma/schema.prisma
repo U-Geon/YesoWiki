@@ -7,14 +7,16 @@ datasource db {
 }
 
 model Document {
-  id         Int               @id @default(autoincrement())
-  title      String            @unique
-  content    String            @db.Text
-  editorIp   String?           @map("editor_ip")
-  editorName String?           @map("editor_name")
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
-  history    DocumentHistory[]
+  id            Int               @id @default(autoincrement())
+  title         String            @unique
+  content       String            @db.Text
+  editorIp      String?           @map("editor_ip")
+  editorName    String?           @map("editor_name")
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  history       DocumentHistory[]
+  outgoingLinks DocumentLink[]    @relation("source")
+  incomingLinks DocumentLink[]    @relation("target")
 }
 
 model DocumentHistory {
@@ -25,4 +27,16 @@ model DocumentHistory {
   editorIp   String?  @map("editor_ip")
   editorName String?  @map("editor_name")
   createdAt  DateTime @default(now())
+}
+
+// 문서 간 참조 관계를 저장합니다. [[문서 제목]] 구문 파싱 결과를 반영합니다.
+model DocumentLink {
+  id       Int      @id @default(autoincrement())
+  sourceId Int      @map("source_id")
+  targetId Int      @map("target_id")
+  source   Document @relation("source", fields: [sourceId], references: [id], onDelete: Cascade)
+  target   Document @relation("target", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, targetId])
+  @@map("document_link")
 }
