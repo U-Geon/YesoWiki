@@ -10,8 +10,8 @@
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript |
 | Styling | Tailwind CSS |
-| Database | MySQL |
-| ORM | Prisma |
+| Database | PostgreSQL (Supabase) |
+| ORM | Prisma 7 |
 | Package Manager | pnpm |
 | Deployment | Vercel |
 
@@ -42,13 +42,22 @@ pnpm install
 
 ```bash
 cp .env.example .env
-# .env 파일을 열어 DATABASE_URL을 본인의 MySQL 접속 정보로 수정하세요.
 ```
 
-### 3. 데이터베이스 마이그레이션
+`.env` 파일을 열어 아래 두 가지 값을 Supabase 대시보드에서 복사하여 입력합니다.
+
+| 변수 | 설명 | Supabase 위치 |
+|------|------|---------------|
+| `DATABASE_URL` | 앱 구동용 — Transaction Pooler (포트 `6543`) | Project Settings → Database → Connection string |
+| `DIRECT_URL` | DB 마이그레이션용 — Direct Connection (포트 `5432`) | 위와 동일, "Use connection pooling" 해제 시 노출 |
+
+> [!IMPORTANT]
+> 두 값 모두 `postgres.[프로젝트ID]` 형식의 사용자 이름을 포함해야 합니다.
+
+### 3. 데이터베이스 스키마 동기화
 
 ```bash
-pnpm dlx prisma db push
+pnpm prisma db push
 ```
 
 ### 4. 로컬 개발 서버 실행
@@ -56,6 +65,20 @@ pnpm dlx prisma db push
 ```bash
 pnpm dev
 ```
+
+### 5. CI/CD — GitHub Secrets 등록 (배포 시 필수)
+
+CI 빌드 및 Vercel 프로덕션 배포가 정상 작동하려면 **GitHub Repository Secrets**에 다음 두 값을 반드시 등록해야 합니다.
+
+> **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+
+| Secret 이름 | 값 |
+|------------|----|
+| `DATABASE_URL` | `.env`의 `DATABASE_URL` 값 (Pooler, 포트 `6543`) |
+| `DIRECT_URL` | `.env`의 `DIRECT_URL` 값 (Direct, 포트 `5432`) |
+
+> [!WARNING]
+> `DIRECT_URL`이 누락되면 CI 빌드 시 `PrismaConfigEnvError: Cannot resolve environment variable: DIRECT_URL` 에러가 발생합니다.
 
 ## 📁 프로젝트 구조
 

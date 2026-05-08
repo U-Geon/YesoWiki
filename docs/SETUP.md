@@ -30,52 +30,46 @@ git checkout develop
 pnpm install
 
 # 4. 환경변수 파일 생성
-cp .env.example .env
-# .env를 열어 DATABASE_URL을 실제 DB 접속 정보로 수정
 ```
 
 ---
 
-## 3. 데이터베이스 설정
-
-### 3.1. 로컬 개발 (MySQL)
+## 3. 환경변수 설정
 
 ```bash
-# .env 파일에 로컬 MySQL 접속 정보 입력
-DATABASE_URL="mysql://root:password@localhost:3306/yesowiki"
-
-# DB 스키마 동기화 (개발 환경에서는 db push 사용)
-pnpm prisma db push
-
-# Prisma Studio로 데이터 확인 (선택)
-pnpm prisma studio
+cp .env.example .env
 ```
 
-### 3.2. 클라우드 DB (Supabase - PostgreSQL, 권장)
+`.env` 파일을 열어 아래 두 가지 접속 문자열을 **Supabase 대시보드**에서 복사하여 입력합니다.
 
-Vercel 배포 환경에서는 로컬 MySQL 대신 **Supabase(PostgreSQL)** 사용을 권장합니다.
+> Supabase → **Project Settings** → **Database** → **Connection string**
+
+| 환경변수 | 용도 | Supabase 포트 | 비고 |
+|----------|------|--------------|------|
+| `DATABASE_URL` | 앱 구동 (Connection Pooler) | `6543` | URL 끝에 `?pgbouncer=true` 필수 |
+| `DIRECT_URL` | DB 스키마 업데이트 (`db push`) | `5432` | 비범주 파라미터 없음 |
 
 > [!IMPORTANT]
-> Supabase를 사용할 경우 `prisma/schema.prisma`의 `provider`를 `"mysql"` → `"postgresql"`로 변경해야 합니다.
-
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
-
-```bash
-# Supabase Connection String을 .env에 입력 후
-DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
-
-# 스키마 동기화
-pnpm prisma db push
-```
+> 두 주소 모두 사용자 이름이 `postgres` 만으로는 안 되며, **`postgres.[Supabase 프로젝트 Reference ID]`** 형식이어야 합니다.
 
 ---
 
-## 4. 개발 서버 실행
+## 4. 데이터베이스 스키마 동기화
+
+```bash
+# Prisma Client 재생성 (스키마 변경 후 필수)
+pnpm prisma generate
+
+# DB에 스키마 적용 (DIRECT_URL 사용)
+pnpm prisma db push
+```
+
+> [!NOTE]
+> `db push`는 `DIRECT_URL`을 통해 5432 포트로 직접 연결합니다. 이 값이 설정되지 않으면 `PrismaConfigEnvError`가 발생합니다.
+
+---
+
+## 5. 개발 서버 실행
 
 ```bash
 pnpm dev
@@ -122,7 +116,26 @@ chore(ci): Vercel 빌드 스크립트 최적화
 
 ---
 
-## 7. 주요 디렉토리 구조
+## 7. CI/CD — GitHub Secrets 등록
+
+GitHub Actions CI 빌드와 Vercel 프로덕션 배포가 정상 작동하려면 다음 값을 **GitHub Repository Secrets**에 등록해야 합니다.
+
+> **저장소 Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+
+| Secret 이름 | 값 | 용도 |
+|------------|----|----|
+| `DATABASE_URL` | `.env`의 `DATABASE_URL` (Pooler, 포트 `6543`) | 앱 실행 + CI 빌드 |
+| `DIRECT_URL` | `.env`의 `DIRECT_URL` (Direct, 포트 `5432`) | Prisma 설정 파일 로드 |
+
+> [!WARNING]
+> `DIRECT_URL` Secret이 누락되면 CI 빌드 단계(`pnpm build`)에서 다음 에러가 발생합니다:
+> ```
+> PrismaConfigEnvError: Cannot resolve environment variable: DIRECT_URL
+> ```
+
+---
+
+## 8. 주요 디렉토리 구조
 
 ```
 YesoWiki/
