@@ -23,12 +23,12 @@
 
 ## 2. YesoWiki 기술 스택 (Tech Stack)
 
-- **프레임워크**: Next.js (App Router 기반, Frontend & Backend 통합)
+- **프레임워크**: Next.js 14 (App Router 기반, Frontend & Backend 통합)
 - **언어**: TypeScript
 - **스타일링**: Tailwind CSS
 - **패키지 매니저**: pnpm
-- **데이터베이스**: MySQL
-- **ORM**: Prisma
+- **데이터베이스**: PostgreSQL (Supabase)
+- **ORM**: Prisma 7 (`prisma.config.ts` 기반 설정, `@prisma/adapter-pg` 드라이버 어댑터 사용)
 - **배포 환경**: Vercel
 
 ## 3. 커밋 컨벤션 (Commit Convention)

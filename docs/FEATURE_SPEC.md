@@ -11,19 +11,19 @@ Next.js App Router 기준입니다.
 
 ```
 src/app/
-├── (auth)/                         # 인증 관련 라우트 그룹 (Phase 2)
-│   ├── login/page.tsx
-│   └── layout.tsx
 ├── wiki/
 │   ├── page.tsx                    # GET  /wiki         - 문서 목록
 │   ├── new/
-│   │   └── page.tsx                # GET  /wiki/new     - 문서 생성 폼
+│   │   ├── page.tsx                # GET  /wiki/new     - 문서 생성 페이지 (Server Component)
+│   │   └── NewWikiForm.tsx         # 문서 생성 폼 (Client Component)
 │   └── [title]/
 │       ├── page.tsx                # GET  /wiki/[title] - 문서 상세
+│       ├── not-found.tsx           # 문서 없을 때 404 UI
 │       ├── edit/
-│       │   └── page.tsx            # GET  /wiki/[title]/edit - 문서 수정 폼
+│       │   ├── page.tsx            # GET  /wiki/[title]/edit - 문서 수정 페이지 (Server Component)
+│       │   └── EditForm.tsx        # 문서 수정 폼 (Client Component)
 │       └── history/
-│           └── page.tsx            # GET  /wiki/[title]/history - 수정 이력
+│           └── page.tsx            # GET  /wiki/[title]/history - 수정 이력 (미구현)
 ├── api/
 │   └── (향후 외부 연동 필요 시만 사용)
 └── page.tsx                        # GET  /             - 메인(랜딩) 페이지
@@ -85,15 +85,17 @@ src/app/
 | Server Action 위치 | `src/app/wiki/actions.ts` |
 | 유효성 검사 | `title` 필수, 공백만 불가, 중복 제목 불가 |
 | 성공 시 | `redirect('/wiki/[생성된 title]')` |
-| 실패 시 | 에러 메시지 반환 (React 19 `useActionState` 활용) |
+| 실패 시 | 에러 메시지 반환 (React 18 `useFormState` 활용) |
 
 **Server Action 로직**
 
 ```
-createDocument(formData)
+createDocument(prevState, formData)
   1. title, content, editorName(선택) 추출 및 trim
   2. 유효성 검사 (빈 값, 중복 title)
-  3. editorIp를 요청 헤더(x-forwarded-for / headers())에서 추출
+  3. editorIp를 요청 헤더에서 추출:
+     - x-real-ip 우선
+     - 없으면 x-forwarded-for의 가장 우측 값(rightmost)
   4. db.document.create({ data: { title, content, editorIp, editorName } })
   5. revalidatePath('/wiki')
   6. redirect(`/wiki/${encodeURIComponent(title)}`)
@@ -113,15 +115,16 @@ createDocument(formData)
 **Server Action 로직 (트랜잭션 필수)**
 
 ```
-updateDocument(formData)
-  1. documentId, newContent, editorName(선택) 추출
-  2. editorIp를 요청 헤더에서 추출
-  3. 기존 document 조회 (없으면 notFound)
-  4. Prisma 트랜잭션:
+updateDocument(prevState, formData)
+  1. rawDocumentId 추출 → null/빈값/음수/소수 검증 후 Number 변환
+  2. newContent, editorName(선택) 추출
+  3. editorIp를 요청 헤더에서 추출 (x-real-ip 우선, x-forwarded-for rightmost 폴백)
+  4. Prisma 트랜잭션 (try-catch로 에러 핸들링):
      a. DocumentHistory.create (기존 content + 기존 editorIp/editorName 백업)
      b. Document.update (새 content, editorIp, editorName으로 교체)
-  5. revalidatePath(`/wiki/${title}`)
-  6. redirect(`/wiki/${title}`)
+  5. revalidatePath('/wiki')
+  6. revalidatePath(`/wiki/${title}`)
+  7. redirect(`/wiki/${title}`)
 ```
 
 > [!WARNING]
@@ -144,19 +147,22 @@ updateDocument(formData)
 
 | 컴포넌트 | 경로 | 타입 | 역할 |
 |---------|------|------|------|
-| `WikiEditor` | `src/components/WikiEditor.tsx` | Client | 마크다운 텍스트에어리어 + 미리보기 |
-| `MarkdownRenderer` | `src/components/MarkdownRenderer.tsx` | Client | react-markdown + XSS sanitize 래퍼 |
+| `NewWikiForm` | `src/app/wiki/new/NewWikiForm.tsx` | Client | 새 문서 작성 폼 (`useFormState`) |
+| `EditForm` | `src/app/wiki/[title]/edit/EditForm.tsx` | Client | 문서 수정 폼 (`useFormState`) |
+| `MarkdownRenderer` | `src/components/MarkdownRenderer.tsx` | **Server** | react-markdown + XSS sanitize 래퍼 |
+| `SubmitButton` | `src/components/SubmitButton.tsx` | Client | 폼 제출 버튼 (`useFormStatus` 활용) |
 | `BacklinkParser` | `src/lib/backlink.ts` | 유틸 | `[[제목]]` → `<a>` 변환 로직 |
-| `DocumentCard` | `src/components/DocumentCard.tsx` | Server | 목록에서 각 문서 카드 |
-| `Navbar` | `src/components/Navbar.tsx` | Server | 전역 네비게이션 |
 
 ---
 
 ## 4. 보안 체크리스트 (Reviewer 필수 확인)
 
-- [ ] 모든 사용자 입력(`title`, `content`, `editorName`)은 서버에서 trim + 유효성 검사 수행
-- [ ] 마크다운 렌더링 시 `rehype-sanitize` 적용 (스크립트 태그, 이벤트 핸들러 제거)
-- [ ] `editorIp`는 클라이언트가 아닌 **서버의 `headers()` 함수**에서 추출 (위조 방지)
-- [ ] Prisma 쿼리는 모두 파라미터화된 쿼리 사용 (ORM 기본 동작, SQL Injection 방지)
-- [ ] `Document.title` 중복 시 Prisma `P2002` 에러를 catch하여 사용자 친화적 메시지 반환
-- [ ] 반달리즘(문서 훼손) 대응: DocumentHistory를 통한 이전 버전 복원 기능이 동작해야 함
+- [x] 모든 사용자 입력(`title`, `content`, `editorName`)은 서버에서 trim + 유효성 검사 수행
+- [x] 마크다운 렌더링 시 `rehype-sanitize` 적용 (스크립트 태그, 이벤트 핸들러 제거)
+- [x] `editorIp`는 클라이언트가 아닌 **서버의 `headers()` 함수**에서 추출 (`x-real-ip` 우선, `x-forwarded-for` rightmost 폴백)
+- [x] Prisma 쿼리는 모두 파라미터화된 쿼리 사용 (ORM 기본 동작, SQL Injection 방지)
+- [x] `Document.title` 중복 시 Prisma `P2002` 에러를 catch하여 사용자 친화적 메시지 반환
+- [x] 반달리즘(문서 훼손) 대응: DocumentHistory를 통한 이전 버전 복원 기능이 동작해야 함
+- [x] `documentId` 검증: null/빈값/음수/소수점 모두 차단
+- [x] DB 에러 서버 로깅 후 클라이언트에는 정제된 에러 메시지만 반환
+- [x] 클라이언트 응답에 raw `editorIp` 미포함 (서버에서 `editorAlias`로 변환 후 전달)
