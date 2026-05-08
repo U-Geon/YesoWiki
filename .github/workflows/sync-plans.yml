@@ -6,6 +6,7 @@ on:
       - 'plans/*.md'
     branches:
       - main
+      - develop
 
 permissions:
   issues: write
@@ -47,8 +48,9 @@ jobs:
 
               // Extract fields
               const getField = (key) => {
-                const match = frontmatter.match(new RegExp(`^${key}:\\s*"?(.+?)"?\\s*$`, 'm'));
-                return match ? match[1].trim() : '';
+                const match = frontmatter.match(new RegExp(`^${key}:\\s*(.*)$`, 'm'));
+                if (!match) return '';
+                return match[1].trim().replace(/^"|"$/g, '');
               };
               const getArrayField = (key) => {
                 const match = frontmatter.match(new RegExp(`^${key}:\\s*\\[(.*)\\]`, 'm'));
@@ -114,16 +116,16 @@ jobs:
                 // Auto-create branch
                 if (branch) {
                   try {
-                    const mainRef = await github.rest.git.getRef({
+                    const baseRef = await github.rest.git.getRef({
                       owner: context.repo.owner,
                       repo: context.repo.repo,
-                      ref: 'heads/main',
+                      ref: 'heads/develop',
                     });
                     await github.rest.git.createRef({
                       owner: context.repo.owner,
                       repo: context.repo.repo,
                       ref: `refs/heads/${branch}`,
-                      sha: mainRef.data.object.sha,
+                      sha: baseRef.data.object.sha,
                     });
                     console.log(`🌿 Created branch: ${branch}`);
                   } catch (e) {

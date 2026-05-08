@@ -7,12 +7,15 @@ Builder Agent가 새로운 기능이나 작업을 기획할 때 준수해야 하
 Builder Agent는 계획 수립 시 반드시 `plans/` 디렉토리에 Plan MD 파일을 생성해야 합니다.
 
 ### 파일명 규칙
+
 ```
 {순번 3자리}-{kebab-case 설명}.md
 ```
+
 예: `006-search-feature.md`, `007-document-tags.md`
 
 ### 필수 프론트매터 (Frontmatter)
+
 ```yaml
 ---
 id: "006-search-feature"
@@ -50,6 +53,7 @@ backlog → open → in-progress → review → done
 ## 4. 자동화 파이프라인
 
 `plans/*.md` 파일이 `main` 브랜치에 push되면:
+
 1. GitHub Actions(`.github/workflows/sync-plans.yml`)가 프론트매터를 파싱합니다.
 2. 동일 제목의 Issue가 없으면 **자동 생성**합니다.
 3. 이미 있으면 내용을 **자동 업데이트**합니다.
