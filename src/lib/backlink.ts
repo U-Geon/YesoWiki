@@ -3,8 +3,9 @@
  * XSS 방지를 위해 순수 문자열 치환만 수행하며, 실제 렌더링은 rehype-sanitize를 통과합니다.
  */
 export function parseBacklinks(content: string): string {
-  return content.replace(/\[\[([^\]]+)\]\]/g, (_, title: string) => {
+  return content.replace(/\[\[([^\]]+)\]\]/g, (match, title: string) => {
     const trimmed = title.trim()
+    if (!trimmed) return match
     const encoded = encodeURIComponent(trimmed)
     return `[${trimmed}](/wiki/${encoded})`
   })
