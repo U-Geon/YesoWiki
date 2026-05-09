@@ -1,14 +1,14 @@
 ---
-id: "007-documentation"
-title: "[Phase 0] 프로젝트 문서화 - ERD, 기능 명세서, 개발 환경 가이드 추가"
-status: "in-progress"
-priority: "medium"
-labels: ["documentation"]
-assignee: ""
-branch: "chore/007-documentation"
-phase: "Phase 0"
-created: "2026-05-07"
-updated: "2026-05-07"
+id: '007-documentation'
+title: '[Phase 0] 프로젝트 문서화 - ERD, 기능 명세서, 개발 환경 가이드 추가'
+status: 'in-progress'
+priority: 'medium'
+labels: ['documentation']
+assignee: ''
+branch: 'chore/007-documentation'
+phase: 'Phase 0'
+created: '2026-05-07'
+updated: '2026-05-07'
 ---
 
 ## 설명 (Description)

@@ -46,15 +46,15 @@
 
 ### 타입 (Type)
 
-| 타입 | 설명 | 예시 |
-|------|------|------|
-| `feat` | 새로운 기능 추가 | `feat(wiki): 문서 생성 API 구현` |
-| `fix` | 버그 수정 | `fix(auth): 로그인 토큰 만료 처리` |
-| `docs` | 문서 변경 (코드 변경 없음) | `docs: REQUIREMENTS.md 업데이트` |
-| `style` | 코드 포맷팅 (기능 변화 없음) | `style: ESLint 경고 수정` |
-| `refactor` | 리팩토링 (기능 변화 없음) | `refactor(lib): prisma 클라이언트 싱글턴화` |
-| `test` | 테스트 추가/수정 | `test(wiki): CRUD 통합 테스트 추가` |
-| `chore` | 빌드, 설정, 도구 변경 | `chore: pnpm 의존성 업데이트` |
+| 타입       | 설명                         | 예시                                        |
+| ---------- | ---------------------------- | ------------------------------------------- |
+| `feat`     | 새로운 기능 추가             | `feat(wiki): 문서 생성 API 구현`            |
+| `fix`      | 버그 수정                    | `fix(auth): 로그인 토큰 만료 처리`          |
+| `docs`     | 문서 변경 (코드 변경 없음)   | `docs: REQUIREMENTS.md 업데이트`            |
+| `style`    | 코드 포맷팅 (기능 변화 없음) | `style: ESLint 경고 수정`                   |
+| `refactor` | 리팩토링 (기능 변화 없음)    | `refactor(lib): prisma 클라이언트 싱글턴화` |
+| `test`     | 테스트 추가/수정             | `test(wiki): CRUD 통합 테스트 추가`         |
+| `chore`    | 빌드, 설정, 도구 변경        | `chore: pnpm 의존성 업데이트`               |
 
 ### 규칙
 
@@ -78,14 +78,14 @@ develop ────────────────────────
 feat/xxx          fix/xxx        chore/xxx ...
 ```
 
-| 브랜치 | 역할 | 배포 환경 | 직접 Push |
-|--------|------|-----------|----------|
-| `main` | 최종 릴리즈, 운영 버전 | Vercel **Production** | ❌ 금지 |
-| `develop` | 기능 통합 및 QA | Vercel **Preview** | ❌ 금지 |
-| `feat/*` | 새 기능 개발 | 로컬 | ✅ 허용 |
-| `fix/*` | 버그 수정 | 로컬 | ✅ 허용 |
-| `hotfix/*` | 운영 긴급 수정 | 로컬 | ✅ 허용 |
-| `chore/*` | 설정/인프라/문서 | 로컬 | ✅ 허용 |
+| 브랜치     | 역할                   | 배포 환경             | 직접 Push |
+| ---------- | ---------------------- | --------------------- | --------- |
+| `main`     | 최종 릴리즈, 운영 버전 | Vercel **Production** | ❌ 금지   |
+| `develop`  | 기능 통합 및 QA        | Vercel **Preview**    | ❌ 금지   |
+| `feat/*`   | 새 기능 개발           | 로컬                  | ✅ 허용   |
+| `fix/*`    | 버그 수정              | 로컬                  | ✅ 허용   |
+| `hotfix/*` | 운영 긴급 수정         | 로컬                  | ✅ 허용   |
+| `chore/*`  | 설정/인프라/문서       | 로컬                  | ✅ 허용   |
 
 ### 4.2. 병합 규칙 (Merge Rules)
 
@@ -103,13 +103,13 @@ feat/xxx          fix/xxx        chore/xxx ...
 <type>/<plan-id>-<kebab-case-설명>
 ```
 
-| 타입 | 용도 | 베이스 브랜치 | 예시 |
-|------|------|-------------|------|
-| `feat/` | 새 기능 | `develop` | `feat/002-wiki-crud` |
-| `fix/` | 버그 수정 | `develop` | `fix/010-xss-bug` |
-| `hotfix/` | 운영 긴급 패치 | `main` | `hotfix/critical-auth-error` |
-| `chore/` | 인프라/설정 | `develop` | `chore/011-ci-pipeline` |
-| `docs/` | 문서 작업 | `develop` | `docs/012-api-reference` |
+| 타입      | 용도           | 베이스 브랜치 | 예시                         |
+| --------- | -------------- | ------------- | ---------------------------- |
+| `feat/`   | 새 기능        | `develop`     | `feat/002-wiki-crud`         |
+| `fix/`    | 버그 수정      | `develop`     | `fix/010-xss-bug`            |
+| `hotfix/` | 운영 긴급 패치 | `main`        | `hotfix/critical-auth-error` |
+| `chore/`  | 인프라/설정    | `develop`     | `chore/011-ci-pipeline`      |
+| `docs/`   | 문서 작업      | `develop`     | `docs/012-api-reference`     |
 
 ### 4.4. 이슈 및 Plan 컨벤션
 

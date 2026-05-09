@@ -3,16 +3,16 @@
 # Builder Agent가 새로운 작업을 기획할 때 이 파일을 복사하여 Plan을 정의합니다.
 # main 브랜치에 push 시 GitHub Actions가 자동으로 Issue와 브랜치를 생성합니다.
 
-id: ""                    # 파일명과 동일 (예: "006-search-feature")
-title: ""                 # GitHub Issue 제목 (예: "[Phase N] 기능 설명")
-status: "backlog"         # backlog | open | in-progress | review | done
-priority: "medium"        # low | medium | high | critical
-labels: []                # GitHub 라벨 (예: ["feature", "frontend"])
-assignee: ""              # GitHub 사용자명 (비워두면 미할당)
-branch: ""                # 작업 브랜치명 (예: "feat/006-search-feature")
-phase: ""                 # 프로젝트 Phase (예: "Phase 1")
-created: ""               # 생성일 (YYYY-MM-DD)
-updated: ""               # 최종 수정일
+id: '' # 파일명과 동일 (예: "006-search-feature")
+title: '' # GitHub Issue 제목 (예: "[Phase N] 기능 설명")
+status: 'backlog' # backlog | open | in-progress | review | done
+priority: 'medium' # low | medium | high | critical
+labels: [] # GitHub 라벨 (예: ["feature", "frontend"])
+assignee: '' # GitHub 사용자명 (비워두면 미할당)
+branch: '' # 작업 브랜치명 (예: "feat/006-search-feature")
+phase: '' # 프로젝트 Phase (예: "Phase 1")
+created: '' # 생성일 (YYYY-MM-DD)
+updated: '' # 최종 수정일
 ---
 
 ## 설명 (Description)

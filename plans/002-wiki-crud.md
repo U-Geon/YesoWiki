@@ -1,14 +1,14 @@
 ---
-id: "002-wiki-crud"
-title: "[Phase 1] 위키 문서 CRUD 기능 구현"
-status: "open"
-priority: "high"
-labels: ["feature", "backend", "frontend"]
-assignee: ""
-branch: "feat/002-wiki-crud"
-phase: "Phase 1"
-created: "2026-04-30"
-updated: "2026-04-30"
+id: '002-wiki-crud'
+title: '[Phase 1] 위키 문서 CRUD 기능 구현'
+status: 'open'
+priority: 'high'
+labels: ['feature', 'backend', 'frontend']
+assignee: ''
+branch: 'feat/002-wiki-crud'
+phase: 'Phase 1'
+created: '2026-04-30'
+updated: '2026-04-30'
 ---
 
 ## 설명 (Description)

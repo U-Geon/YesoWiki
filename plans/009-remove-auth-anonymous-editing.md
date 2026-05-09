@@ -1,14 +1,14 @@
 ---
-id: "009-remove-auth-anonymous-editing"
-title: "[Phase 0] 인증 시스템 제거 및 익명 편집 정책 도입"
-status: "in-progress"
-priority: "high"
-labels: ["architecture", "breaking-change"]
-assignee: ""
-branch: "chore/009-anonymous-editing"
-phase: "Phase 0"
-created: "2026-05-07"
-updated: "2026-05-07"
+id: '009-remove-auth-anonymous-editing'
+title: '[Phase 0] 인증 시스템 제거 및 익명 편집 정책 도입'
+status: 'in-progress'
+priority: 'high'
+labels: ['architecture', 'breaking-change']
+assignee: ''
+branch: 'chore/009-anonymous-editing'
+phase: 'Phase 0'
+created: '2026-05-07'
+updated: '2026-05-07'
 ---
 
 ## 설명 (Description)

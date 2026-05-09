@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - develop   # develop 대상 PR도 검증
+      - develop # develop 대상 PR도 검증
 
 jobs:
   verify:

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { db } from '@/lib/prisma'
+import { extractBacklinkTitles } from '@/lib/backlink'
 
 export interface PrevState {
   error?: string
@@ -15,7 +16,10 @@ export interface ActionResult {
 
 // ─── 문서 생성 ────────────────────────────────────────────────────────────────
 
-export async function createDocument(prevState: PrevState, formData: FormData): Promise<ActionResult> {
+export async function createDocument(
+  prevState: PrevState,
+  formData: FormData,
+): Promise<ActionResult> {
   const title = (formData.get('title') as string)?.trim()
   const content = (formData.get('content') as string)?.trim()
   const editorName = (formData.get('editorName') as string)?.trim() || null
@@ -32,9 +36,11 @@ export async function createDocument(prevState: PrevState, formData: FormData): 
     'unknown'
 
   try {
-    await db.document.create({
+    const created = await db.document.create({
       data: { title, content, editorIp, editorName },
     })
+    // [[제목]] 구문에서 참조 관계를 추출하여 DocumentLink 동기화
+    await syncDocumentLinks(created.id, content)
   } catch (e: unknown) {
     const err = e as { code?: string }
     if (err.code === 'P2002') {
@@ -49,12 +55,15 @@ export async function createDocument(prevState: PrevState, formData: FormData): 
 
 // ─── 문서 수정 ────────────────────────────────────────────────────────────────
 
-export async function updateDocument(prevState: PrevState, formData: FormData): Promise<ActionResult> {
+export async function updateDocument(
+  prevState: PrevState,
+  formData: FormData,
+): Promise<ActionResult> {
   const rawDocumentId = formData.get('documentId')
   if (!rawDocumentId || rawDocumentId === '') {
     return { error: '잘못된 요청입니다.' }
   }
-  
+
   const documentId = Number(rawDocumentId)
   if (!Number.isInteger(documentId) || documentId <= 0) {
     return { error: '잘못된 요청입니다.' }
@@ -75,7 +84,7 @@ export async function updateDocument(prevState: PrevState, formData: FormData): 
   try {
     const existing = await db.document.findUnique({ where: { id: documentId } })
     if (!existing) return { error: '문서를 찾을 수 없습니다.' }
-    
+
     existingTitle = existing.title
 
     // 트랜잭션: 히스토리 백업 → 본문 업데이트 (원자적 실행)
@@ -93,6 +102,8 @@ export async function updateDocument(prevState: PrevState, formData: FormData): 
         data: { content: newContent, editorIp, editorName },
       }),
     ])
+    // 수정된 내용 기준으로 DocumentLink 재동기화
+    await syncDocumentLinks(documentId, newContent)
   } catch (error) {
     console.error('Failed to update document:', error)
     return { error: '문서 수정 중 오류가 발생했습니다.' }
@@ -101,4 +112,36 @@ export async function updateDocument(prevState: PrevState, formData: FormData): 
   revalidatePath('/wiki')
   revalidatePath(`/wiki/${encodeURIComponent(existingTitle)}`)
   redirect(`/wiki/${encodeURIComponent(existingTitle)}`)
+}
+
+// ─── DocumentLink 동기화 ──────────────────────────────────────────────────────
+
+/**
+ * 문서 내의 [[제목]] 구문을 파싱하여 DocumentLink 테이블을 최신 상태로 동기화합니다.
+ * 기존 링크를 모두 삭제 후 현재 내용 기준으로 재삽입하는 방식으로 동작합니다.
+ */
+async function syncDocumentLinks(sourceId: number, content: string): Promise<void> {
+  const referencedTitles = extractBacklinkTitles(content)
+
+  // 현재 내용에서 참조하는 문서들을 DB에서 조회
+  const targetDocs =
+    referencedTitles.length > 0
+      ? await db.document.findMany({
+          where: { title: { in: referencedTitles } },
+          select: { id: true },
+        })
+      : []
+
+  // 기존 outgoing 링크 삭제 후 새 링크 삽입 (원자적 실행)
+  await db.$transaction([
+    db.documentLink.deleteMany({ where: { sourceId } }),
+    ...(targetDocs.length > 0
+      ? [
+          db.documentLink.createMany({
+            data: targetDocs.map((t) => ({ sourceId, targetId: t.id })),
+            skipDuplicates: true,
+          }),
+        ]
+      : []),
+  ])
 }

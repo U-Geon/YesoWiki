@@ -96,9 +96,7 @@ export default async function HomePage() {
       >
         <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           현재{' '}
-          <strong style={{ color: 'var(--accent-hover)', fontSize: '1.3rem' }}>
-            {docCount}
-          </strong>
+          <strong style={{ color: 'var(--accent-hover)', fontSize: '1.3rem' }}>{docCount}</strong>
           개의 문서가 있어요
         </span>
       </div>

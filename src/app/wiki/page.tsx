@@ -11,7 +11,7 @@ export default async function WikiListPage() {
 
   const documents = rawDocuments.map(({ editorIp, ...doc }) => ({
     ...doc,
-    editorAlias: doc.editorName ?? (editorIp ? editorIp.slice(0, 8) + '...' : '익명')
+    editorAlias: doc.editorName ?? (editorIp ? editorIp.slice(0, 8) + '...' : '익명'),
   }))
 
   return (
