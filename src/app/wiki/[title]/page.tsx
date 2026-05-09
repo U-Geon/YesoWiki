@@ -43,12 +43,13 @@ export default async function WikiDetailPage({ params }: Props) {
 
   // 본문 내 [[링크]] 렌더링을 위해 참조된 문서들의 존재 여부 확인
   const referencedTitles = extractBacklinkTitles(doc.content)
-  const existingDocs = referencedTitles.length > 0
-    ? await db.document.findMany({
-        where: { title: { in: referencedTitles } },
-        select: { title: true },
-      })
-    : []
+  const existingDocs =
+    referencedTitles.length > 0
+      ? await db.document.findMany({
+          where: { title: { in: referencedTitles } },
+          select: { title: true },
+        })
+      : []
   const existingTitles = new Set(existingDocs.map((d) => d.title))
 
   const contentWithBacklinks = parseBacklinksWithExistence(doc.content, existingTitles)
@@ -173,4 +174,3 @@ export default async function WikiDetailPage({ params }: Props) {
     </div>
   )
 }
-

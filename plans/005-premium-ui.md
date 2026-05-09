@@ -1,14 +1,14 @@
 ---
-id: "005-premium-ui"
-title: "[Phase 2] 프리미엄 UI/UX 디자인 적용"
-status: "backlog"
-priority: "medium"
-labels: ["feature", "frontend", "design"]
-assignee: ""
-branch: "feat/005-premium-ui"
-phase: "Phase 2"
-created: "2026-04-30"
-updated: "2026-04-30"
+id: '005-premium-ui'
+title: '[Phase 2] 프리미엄 UI/UX 디자인 적용'
+status: 'backlog'
+priority: 'medium'
+labels: ['feature', 'frontend', 'design']
+assignee: ''
+branch: 'feat/005-premium-ui'
+phase: 'Phase 2'
+created: '2026-04-30'
+updated: '2026-04-30'
 ---
 
 ## 설명 (Description)

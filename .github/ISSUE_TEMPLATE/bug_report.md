@@ -1,8 +1,8 @@
 ---
 name: 🐛 버그 리포트 (Bug Report)
 about: 버그를 발견했을 때 사용합니다.
-title: "[Bug] "
-labels: ["bug"]
+title: '[Bug] '
+labels: ['bug']
 assignees: ''
 ---
 
@@ -26,6 +26,6 @@ assignees: ''
 
 ## 🖥️ 환경
 
-- **OS**: 
-- **브라우저**: 
-- **Node.js 버전**: 
+- **OS**:
+- **브라우저**:
+- **Node.js 버전**:

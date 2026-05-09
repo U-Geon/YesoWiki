@@ -16,7 +16,10 @@ export interface ActionResult {
 
 // ─── 문서 생성 ────────────────────────────────────────────────────────────────
 
-export async function createDocument(prevState: PrevState, formData: FormData): Promise<ActionResult> {
+export async function createDocument(
+  prevState: PrevState,
+  formData: FormData,
+): Promise<ActionResult> {
   const title = (formData.get('title') as string)?.trim()
   const content = (formData.get('content') as string)?.trim()
   const editorName = (formData.get('editorName') as string)?.trim() || null
@@ -52,12 +55,15 @@ export async function createDocument(prevState: PrevState, formData: FormData): 
 
 // ─── 문서 수정 ────────────────────────────────────────────────────────────────
 
-export async function updateDocument(prevState: PrevState, formData: FormData): Promise<ActionResult> {
+export async function updateDocument(
+  prevState: PrevState,
+  formData: FormData,
+): Promise<ActionResult> {
   const rawDocumentId = formData.get('documentId')
   if (!rawDocumentId || rawDocumentId === '') {
     return { error: '잘못된 요청입니다.' }
   }
-  
+
   const documentId = Number(rawDocumentId)
   if (!Number.isInteger(documentId) || documentId <= 0) {
     return { error: '잘못된 요청입니다.' }
@@ -78,7 +84,7 @@ export async function updateDocument(prevState: PrevState, formData: FormData): 
   try {
     const existing = await db.document.findUnique({ where: { id: documentId } })
     if (!existing) return { error: '문서를 찾을 수 없습니다.' }
-    
+
     existingTitle = existing.title
 
     // 트랜잭션: 히스토리 백업 → 본문 업데이트 (원자적 실행)
@@ -118,21 +124,24 @@ async function syncDocumentLinks(sourceId: number, content: string): Promise<voi
   const referencedTitles = extractBacklinkTitles(content)
 
   // 현재 내용에서 참조하는 문서들을 DB에서 조회
-  const targetDocs = referencedTitles.length > 0
-    ? await db.document.findMany({
-        where: { title: { in: referencedTitles } },
-        select: { id: true },
-      })
-    : []
+  const targetDocs =
+    referencedTitles.length > 0
+      ? await db.document.findMany({
+          where: { title: { in: referencedTitles } },
+          select: { id: true },
+        })
+      : []
 
   // 기존 outgoing 링크 삭제 후 새 링크 삽입 (원자적 실행)
   await db.$transaction([
     db.documentLink.deleteMany({ where: { sourceId } }),
     ...(targetDocs.length > 0
-      ? [db.documentLink.createMany({
-          data: targetDocs.map((t) => ({ sourceId, targetId: t.id })),
-          skipDuplicates: true,
-        })]
+      ? [
+          db.documentLink.createMany({
+            data: targetDocs.map((t) => ({ sourceId, targetId: t.id })),
+            skipDuplicates: true,
+          }),
+        ]
       : []),
   ])
 }

@@ -1,14 +1,14 @@
 ---
-id: "003-backlink-system"
-title: "[Phase 1] 백링크(Backlink) 시스템 구현"
-status: "backlog"
-priority: "medium"
-labels: ["feature", "backend"]
-assignee: ""
-branch: "feat/003-backlink-system"
-phase: "Phase 1"
-created: "2026-04-30"
-updated: "2026-04-30"
+id: '003-backlink-system'
+title: '[Phase 1] 백링크(Backlink) 시스템 구현'
+status: 'backlog'
+priority: 'medium'
+labels: ['feature', 'backend']
+assignee: ''
+branch: 'feat/003-backlink-system'
+phase: 'Phase 1'
+created: '2026-04-30'
+updated: '2026-04-30'
 ---
 
 ## 설명 (Description)

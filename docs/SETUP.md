@@ -6,11 +6,11 @@
 
 ## 1. 사전 요구사항 (Prerequisites)
 
-| 도구 | 최소 버전 | 확인 명령 |
-|------|----------|----------|
-| Node.js | v20 이상 | `node -v` |
-| pnpm | v9 이상 | `pnpm -v` |
-| Git | v2.40 이상 | `git --version` |
+| 도구    | 최소 버전  | 확인 명령       |
+| ------- | ---------- | --------------- |
+| Node.js | v20 이상   | `node -v`       |
+| pnpm    | v9 이상    | `pnpm -v`       |
+| Git     | v2.40 이상 | `git --version` |
 
 > pnpm이 없다면: `npm install -g pnpm`
 
@@ -44,10 +44,10 @@ cp .env.example .env
 
 > Supabase → **Project Settings** → **Database** → **Connection string**
 
-| 환경변수 | 용도 | Supabase 포트 | 비고 |
-|----------|------|--------------|------|
-| `DATABASE_URL` | 앱 구동 (Connection Pooler) | `6543` | URL 끝에 `?pgbouncer=true` 필수 |
-| `DIRECT_URL` | DB 스키마 업데이트 (`db push`) | `5432` | 비범주 파라미터 없음 |
+| 환경변수       | 용도                           | Supabase 포트 | 비고                            |
+| -------------- | ------------------------------ | ------------- | ------------------------------- |
+| `DATABASE_URL` | 앱 구동 (Connection Pooler)    | `6543`        | URL 끝에 `?pgbouncer=true` 필수 |
+| `DIRECT_URL`   | DB 스키마 업데이트 (`db push`) | `5432`        | 비범주 파라미터 없음            |
 
 > [!IMPORTANT]
 > 두 주소 모두 사용자 이름이 `postgres` 만으로는 안 되며, **`postgres.[Supabase 프로젝트 Reference ID]`** 형식이어야 합니다.
@@ -104,15 +104,15 @@ chore(ci): Vercel 빌드 스크립트 최적화
 
 ## 6. 유용한 스크립트
 
-| 명령어 | 설명 |
-|--------|------|
-| `pnpm dev` | 로컬 개발 서버 실행 |
-| `pnpm build` | 프로덕션 빌드 (Prisma generate 포함) |
-| `pnpm lint` | ESLint 검사 |
-| `pnpm tsc --noEmit` | TypeScript 타입 검사 |
-| `pnpm prisma studio` | DB 데이터 GUI 확인 |
-| `pnpm prisma db push` | 스키마 변경사항 DB에 반영 |
-| `pnpm prisma generate` | Prisma Client 수동 재생성 |
+| 명령어                 | 설명                                 |
+| ---------------------- | ------------------------------------ |
+| `pnpm dev`             | 로컬 개발 서버 실행                  |
+| `pnpm build`           | 프로덕션 빌드 (Prisma generate 포함) |
+| `pnpm lint`            | ESLint 검사                          |
+| `pnpm tsc --noEmit`    | TypeScript 타입 검사                 |
+| `pnpm prisma studio`   | DB 데이터 GUI 확인                   |
+| `pnpm prisma db push`  | 스키마 변경사항 DB에 반영            |
+| `pnpm prisma generate` | Prisma Client 수동 재생성            |
 
 ---
 
@@ -122,10 +122,10 @@ GitHub Actions CI 빌드와 Vercel 프로덕션 배포가 정상 작동하려면
 
 > **저장소 Settings** → **Secrets and variables** → **Actions** → **New repository secret**
 
-| Secret 이름 | 값 | 용도 |
-|------------|----|----|
-| `DATABASE_URL` | `.env`의 `DATABASE_URL` (Pooler, 포트 `6543`) | 앱 실행 + CI 빌드 |
-| `DIRECT_URL` | `.env`의 `DIRECT_URL` (Direct, 포트 `5432`) | Prisma 설정 파일 로드 |
+| Secret 이름    | 값                                            | 용도                  |
+| -------------- | --------------------------------------------- | --------------------- |
+| `DATABASE_URL` | `.env`의 `DATABASE_URL` (Pooler, 포트 `6543`) | 앱 실행 + CI 빌드     |
+| `DIRECT_URL`   | `.env`의 `DIRECT_URL` (Direct, 포트 `5432`)   | Prisma 설정 파일 로드 |
 
 > [!WARNING]
 > `DIRECT_URL` Secret이 누락되면 CI 빌드 단계(`pnpm build`)에서 다음 에러가 발생합니다:

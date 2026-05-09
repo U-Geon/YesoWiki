@@ -1,14 +1,14 @@
 ---
-id: "001-project-init"
-title: "[Phase 0] 프로젝트 초기화 및 멀티 에이전트 시스템 구축"
-status: "done"
-priority: "critical"
-labels: ["infra", "setup"]
-assignee: ""
-branch: "feat/001-project-init"
-phase: "Phase 0"
-created: "2026-04-30"
-updated: "2026-04-30"
+id: '001-project-init'
+title: '[Phase 0] 프로젝트 초기화 및 멀티 에이전트 시스템 구축'
+status: 'done'
+priority: 'critical'
+labels: ['infra', 'setup']
+assignee: ''
+branch: 'feat/001-project-init'
+phase: 'Phase 0'
+created: '2026-04-30'
+updated: '2026-04-30'
 ---
 
 ## 설명 (Description)
