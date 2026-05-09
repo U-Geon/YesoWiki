@@ -1,7 +1,9 @@
 'use client'
 
 import { useFormState } from 'react-dom'
+
 import { updateDocument } from '@/app/wiki/actions'
+import MarkdownEditor from '@/components/MarkdownEditor'
 import SubmitButton from '@/components/SubmitButton'
 
 interface Props {
@@ -79,25 +81,11 @@ export default function EditForm({ documentId, title, initialContent }: Props) {
         >
           내용 (마크다운)
         </label>
-        <textarea
+        <MarkdownEditor
           id="content"
           name="content"
           required
-          rows={24}
           defaultValue={initialContent}
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            padding: '0.75rem 1rem',
-            color: 'var(--text-primary)',
-            fontSize: '0.95rem',
-            fontFamily: "'Courier New', monospace",
-            lineHeight: 1.7,
-            resize: 'vertical',
-            outline: 'none',
-            width: '100%',
-          }}
         />
       </div>
 
@@ -121,3 +109,4 @@ export default function EditForm({ documentId, title, initialContent }: Props) {
     </form>
   )
 }
+
