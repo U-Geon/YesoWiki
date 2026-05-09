@@ -129,6 +129,7 @@ GitHub Actions CI 빌드와 Vercel 프로덕션 배포가 정상 작동하려면
 
 > [!WARNING]
 > `DIRECT_URL` Secret이 누락되면 CI 빌드 단계(`pnpm build`)에서 다음 에러가 발생합니다:
+>
 > ```
 > PrismaConfigEnvError: Cannot resolve environment variable: DIRECT_URL
 > ```

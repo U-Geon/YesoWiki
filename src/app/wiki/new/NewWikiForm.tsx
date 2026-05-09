@@ -3,6 +3,7 @@
 import { useFormState } from 'react-dom'
 import { createDocument } from '@/app/wiki/actions'
 import SubmitButton from '@/components/SubmitButton'
+import MarkdownEditor from '@/components/MarkdownEditor'
 import Link from 'next/link'
 
 const initialState = { error: '' }
@@ -81,30 +82,15 @@ export default function NewWikiForm() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <label
-          htmlFor="content"
           style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}
         >
           내용 (마크다운) <span style={{ color: 'var(--red)' }}>*</span>
         </label>
-        <textarea
+        <MarkdownEditor
           id="content"
           name="content"
           required
-          rows={20}
           placeholder={`# 문서 제목\n\n내용을 마크다운으로 작성하세요.\n\n[[다른 문서]]처럼 백링크도 사용할 수 있어요!`}
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            padding: '0.75rem 1rem',
-            color: 'var(--text-primary)',
-            fontSize: '0.95rem',
-            fontFamily: "'Courier New', monospace",
-            lineHeight: 1.7,
-            resize: 'vertical',
-            outline: 'none',
-            width: '100%',
-          }}
         />
       </div>
 
@@ -128,3 +114,4 @@ export default function NewWikiForm() {
     </form>
   )
 }
+
