@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { db } from '@/lib/prisma'
-import { parseBacklinksWithExistence } from '@/lib/backlink'
+import { parseBacklinksWithExistence, extractBacklinkTitles } from '@/lib/backlink'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
 
 interface Props {
@@ -41,9 +41,15 @@ export default async function WikiDetailPage({ params }: Props) {
 
   if (!doc) notFound()
 
-  // 본문 내 [[링크]] 렌더링을 위해 현재 DB에 존재하는 문서 제목 집합 조회
-  const allTitles = await db.document.findMany({ select: { title: true } })
-  const existingTitles = new Set(allTitles.map((d) => d.title))
+  // 본문 내 [[링크]] 렌더링을 위해 참조된 문서들의 존재 여부 확인
+  const referencedTitles = extractBacklinkTitles(doc.content)
+  const existingDocs = referencedTitles.length > 0
+    ? await db.document.findMany({
+        where: { title: { in: referencedTitles } },
+        select: { title: true },
+      })
+    : []
+  const existingTitles = new Set(existingDocs.map((d) => d.title))
 
   const contentWithBacklinks = parseBacklinksWithExistence(doc.content, existingTitles)
   const editor = doc.editorName ?? '익명'
