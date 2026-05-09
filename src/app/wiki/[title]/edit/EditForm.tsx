@@ -81,12 +81,7 @@ export default function EditForm({ documentId, title, initialContent }: Props) {
         >
           내용 (마크다운)
         </label>
-        <MarkdownEditor
-          id="content"
-          name="content"
-          required
-          defaultValue={initialContent}
-        />
+        <MarkdownEditor id="content" name="content" required defaultValue={initialContent} />
       </div>
 
       <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
@@ -109,4 +104,3 @@ export default function EditForm({ documentId, title, initialContent }: Props) {
     </form>
   )
 }
-

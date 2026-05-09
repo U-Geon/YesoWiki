@@ -234,7 +234,9 @@ body {
   padding: 0.3rem 0.45rem;
   border-radius: 5px;
   line-height: 1;
-  transition: background 0.12s, color 0.12s;
+  transition:
+    background 0.12s,
+    color 0.12s;
   white-space: nowrap;
   min-width: 1.8rem;
   text-align: center;

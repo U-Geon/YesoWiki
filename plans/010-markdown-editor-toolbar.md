@@ -1,14 +1,14 @@
 ---
-id: "010-markdown-editor-toolbar"
-title: "[Phase 2] 마크다운 에디터 툴바 및 실시간 미리보기 구현"
-status: "backlog"
-priority: "high"
-labels: ["feature", "frontend", "ux"]
-assignee: ""
-branch: "feat/010-markdown-editor-toolbar"
-phase: "Phase 2"
-created: "2026-05-09"
-updated: "2026-05-09"
+id: '010-markdown-editor-toolbar'
+title: '[Phase 2] 마크다운 에디터 툴바 및 실시간 미리보기 구현'
+status: 'backlog'
+priority: 'high'
+labels: ['feature', 'frontend', 'ux']
+assignee: ''
+branch: 'feat/010-markdown-editor-toolbar'
+phase: 'Phase 2'
+created: '2026-05-09'
+updated: '2026-05-09'
 ---
 
 ## 설명 (Description)

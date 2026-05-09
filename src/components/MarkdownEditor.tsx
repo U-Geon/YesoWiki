@@ -137,31 +137,73 @@ export default function MarkdownEditor({
     ],
     // 텍스트 서식
     [
-      { icon: 'B', label: '굵게', action: () => apply((ta) => wrapSelection(ta, '**', '**', '굵게')) },
-      { icon: 'I', label: '기울임', action: () => apply((ta) => wrapSelection(ta, '*', '*', '기울임')) },
-      { icon: 'S̶', label: '취소선', action: () => apply((ta) => wrapSelection(ta, '~~', '~~', '취소선')) },
-      { icon: '<>', label: '인라인 코드', action: () => apply((ta) => wrapSelection(ta, '`', '`', 'code')) },
+      {
+        icon: 'B',
+        label: '굵게',
+        action: () => apply((ta) => wrapSelection(ta, '**', '**', '굵게')),
+      },
+      {
+        icon: 'I',
+        label: '기울임',
+        action: () => apply((ta) => wrapSelection(ta, '*', '*', '기울임')),
+      },
+      {
+        icon: 'S̶',
+        label: '취소선',
+        action: () => apply((ta) => wrapSelection(ta, '~~', '~~', '취소선')),
+      },
+      {
+        icon: '<>',
+        label: '인라인 코드',
+        action: () => apply((ta) => wrapSelection(ta, '`', '`', 'code')),
+      },
     ],
     // 목록
     [
-      { icon: '≡', label: '순서 없는 목록', action: () => apply((ta) => insertLinePrefix(ta, '- ')) },
-      { icon: '1.', label: '순서 있는 목록', action: () => apply((ta) => insertLinePrefix(ta, '1. ')) },
-      { icon: '☑', label: '체크리스트', action: () => apply((ta) => insertLinePrefix(ta, '- [ ] ')) },
+      {
+        icon: '≡',
+        label: '순서 없는 목록',
+        action: () => apply((ta) => insertLinePrefix(ta, '- ')),
+      },
+      {
+        icon: '1.',
+        label: '순서 있는 목록',
+        action: () => apply((ta) => insertLinePrefix(ta, '1. ')),
+      },
+      {
+        icon: '☑',
+        label: '체크리스트',
+        action: () => apply((ta) => insertLinePrefix(ta, '- [ ] ')),
+      },
     ],
     // 기타
     [
-      { icon: '🔗', label: '링크', action: () => apply((ta) => wrapSelection(ta, '[', '](URL)', '링크 텍스트')) },
+      {
+        icon: '🔗',
+        label: '링크',
+        action: () => apply((ta) => wrapSelection(ta, '[', '](URL)', '링크 텍스트')),
+      },
       { icon: '"', label: '인용', action: () => apply((ta) => insertLinePrefix(ta, '> ')) },
-      { icon: '—', label: '구분선', action: () => apply((ta) => {
-        const { selectionStart, value } = ta
-        const newValue = value.slice(0, selectionStart) + '\n---\n' + value.slice(selectionStart)
-        const newCursor = selectionStart + 5
-        return {
-          newValue,
-          selection: { start: newCursor, end: newCursor }
-        }
-      })},
-      { icon: '[[]]', label: '백링크', action: () => apply((ta) => wrapSelection(ta, '[[', ']]', '문서 제목')) },
+      {
+        icon: '—',
+        label: '구분선',
+        action: () =>
+          apply((ta) => {
+            const { selectionStart, value } = ta
+            const newValue =
+              value.slice(0, selectionStart) + '\n---\n' + value.slice(selectionStart)
+            const newCursor = selectionStart + 5
+            return {
+              newValue,
+              selection: { start: newCursor, end: newCursor },
+            }
+          }),
+      },
+      {
+        icon: '[[]]',
+        label: '백링크',
+        action: () => apply((ta) => wrapSelection(ta, '[[', ']]', '문서 제목')),
+      },
     ],
   ]
 
@@ -197,7 +239,11 @@ export default function MarkdownEditor({
         {/* 뷰 모드 전환 */}
         <div className="md-view-toggle">
           {(['edit', 'split', 'preview'] as ViewMode[]).map((mode) => {
-            const labels: Record<ViewMode, string> = { edit: '편집', split: '분할', preview: '미리보기' }
+            const labels: Record<ViewMode, string> = {
+              edit: '편집',
+              split: '분할',
+              preview: '미리보기',
+            }
             return (
               <button
                 key={mode}
