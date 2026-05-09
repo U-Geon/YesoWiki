@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
@@ -8,6 +8,16 @@ import rehypeSanitize from 'rehype-sanitize'
 // ─── 타입 ────────────────────────────────────────────────────────────────────
 
 type ViewMode = 'edit' | 'preview' | 'split'
+
+interface SelectionRange {
+  start: number
+  end: number
+}
+
+interface EditorActionResults {
+  newValue: string
+  selection: SelectionRange
+}
 
 interface ToolbarButton {
   icon: string
@@ -34,8 +44,8 @@ function wrapSelection(
   textarea: HTMLTextAreaElement,
   prefix: string,
   suffix: string,
-  placeholder = '내용'
-): string {
+  placeholder = '내용',
+): EditorActionResults {
   const { selectionStart, selectionEnd, value } = textarea
   const selected = value.slice(selectionStart, selectionEnd)
   const replacement = selected || placeholder
@@ -45,29 +55,26 @@ function wrapSelection(
   // 커서를 감싼 텍스트 안쪽으로 이동
   const cursorStart = selectionStart + prefix.length
   const cursorEnd = cursorStart + replacement.length
-  setTimeout(() => {
-    textarea.focus()
-    textarea.setSelectionRange(cursorStart, cursorEnd)
-  }, 0)
 
-  return newValue
+  return {
+    newValue,
+    selection: { start: cursorStart, end: cursorEnd },
+  }
 }
 
 /**
  * 현재 줄의 앞에 prefix를 삽입합니다. (제목, 목록 등)
  */
-function insertLinePrefix(textarea: HTMLTextAreaElement, prefix: string): string {
+function insertLinePrefix(textarea: HTMLTextAreaElement, prefix: string): EditorActionResults {
   const { selectionStart, value } = textarea
   const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1
   const newValue = value.slice(0, lineStart) + prefix + value.slice(lineStart)
+  const newCursor = selectionStart + prefix.length
 
-  setTimeout(() => {
-    textarea.focus()
-    const newCursor = selectionStart + prefix.length
-    textarea.setSelectionRange(newCursor, newCursor)
-  }, 0)
-
-  return newValue
+  return {
+    newValue,
+    selection: { start: newCursor, end: newCursor },
+  }
 }
 
 // ─── 메인 컴포넌트 ───────────────────────────────────────────────────────────
@@ -83,11 +90,40 @@ export default function MarkdownEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [content, setContent] = useState(defaultValue)
   const [viewMode, setViewMode] = useState<ViewMode>('split')
+  const [pendingSelection, setPendingSelection] = useState<SelectionRange | null>(null)
 
-  const apply = useCallback((fn: (ta: HTMLTextAreaElement) => string) => {
+  // DOM 업데이트 후 커서 위치 적용
+  useLayoutEffect(() => {
+    if (pendingSelection && textareaRef.current) {
+      textareaRef.current.focus()
+      textareaRef.current.setSelectionRange(pendingSelection.start, pendingSelection.end)
+      setPendingSelection(null)
+    }
+  }, [pendingSelection])
+
+  // 화면 크기에 따른 초기 뷰 모드 설정 및 리사이즈 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      if (window.innerWidth <= 768) {
+        // 모바일에서는 스플릿 뷰 대신 단일 뷰(편집)로 초기화 (기존 모드가 split인 경우에만)
+        setViewMode((prev) => (prev === 'split' ? 'edit' : prev))
+      } else {
+        // 데스크탑에서는 스플릿 뷰로 전환 (기존 모드가 edit/preview인 경우에만)
+        setViewMode((prev) => (prev !== 'split' ? 'split' : prev))
+      }
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const apply = useCallback((fn: (ta: HTMLTextAreaElement) => EditorActionResults) => {
     const ta = textareaRef.current
     if (!ta) return
-    setContent(fn(ta))
+    const { newValue, selection } = fn(ta)
+    setContent(newValue)
+    setPendingSelection(selection)
   }, [])
 
   // ─── 툴바 버튼 정의 ───────────────────────────────────────────────────────
@@ -117,11 +153,13 @@ export default function MarkdownEditor({
       { icon: '🔗', label: '링크', action: () => apply((ta) => wrapSelection(ta, '[', '](URL)', '링크 텍스트')) },
       { icon: '"', label: '인용', action: () => apply((ta) => insertLinePrefix(ta, '> ')) },
       { icon: '—', label: '구분선', action: () => apply((ta) => {
-        const ta2 = textareaRef.current!
-        const { selectionStart, value } = ta2
+        const { selectionStart, value } = ta
         const newValue = value.slice(0, selectionStart) + '\n---\n' + value.slice(selectionStart)
-        setTimeout(() => { ta2.focus(); ta2.setSelectionRange(selectionStart + 5, selectionStart + 5) }, 0)
-        return newValue
+        const newCursor = selectionStart + 5
+        return {
+          newValue,
+          selection: { start: newCursor, end: newCursor }
+        }
       })},
       { icon: '[[]]', label: '백링크', action: () => apply((ta) => wrapSelection(ta, '[[', ']]', '문서 제목')) },
     ],
@@ -145,6 +183,7 @@ export default function MarkdownEditor({
                   key={btn.label}
                   type="button"
                   title={btn.label}
+                  aria-label={btn.label}
                   onClick={btn.action}
                   className="md-toolbar__btn"
                 >
@@ -164,6 +203,7 @@ export default function MarkdownEditor({
                 key={mode}
                 type="button"
                 onClick={() => setViewMode(mode)}
+                aria-pressed={viewMode === mode}
                 className={`md-view-toggle__btn${viewMode === mode ? ' active' : ''}`}
               >
                 {labels[mode]}
