@@ -19,10 +19,7 @@ export function parseBacklinks(content: string): string {
  * @param content 마크다운 원문
  * @param existingTitles DB에 실제로 존재하는 문서 제목의 집합 (Set)
  */
-export function parseBacklinksWithExistence(
-  content: string,
-  existingTitles: Set<string>
-): string {
+export function parseBacklinksWithExistence(content: string, existingTitles: Set<string>): string {
   return content.replace(/\[\[([^\]]+)\]\]/g, (match, title: string) => {
     const trimmed = title.trim()
     if (!trimmed) return match

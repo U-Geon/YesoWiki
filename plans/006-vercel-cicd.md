@@ -1,14 +1,14 @@
 ---
-id: "006-vercel-cicd"
-title: "[Phase 0] Vercel CI/CD 파이프라인 및 배포 최적화 설정"
-status: "in-progress"
-priority: "high"
-labels: ["infrastructure", "vercel", "ci-cd"]
-assignee: ""
-branch: "chore/006-vercel-cicd"
-phase: "Phase 0"
-created: "2026-04-30"
-updated: "2026-04-30"
+id: '006-vercel-cicd'
+title: '[Phase 0] Vercel CI/CD 파이프라인 및 배포 최적화 설정'
+status: 'in-progress'
+priority: 'high'
+labels: ['infrastructure', 'vercel', 'ci-cd']
+assignee: ''
+branch: 'chore/006-vercel-cicd'
+phase: 'Phase 0'
+created: '2026-04-30'
+updated: '2026-04-30'
 ---
 
 ## 설명 (Description)

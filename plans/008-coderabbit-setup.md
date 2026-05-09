@@ -1,14 +1,14 @@
 ---
-id: "008-coderabbit-setup"
-title: "[Phase 0] CodeRabbit AI 코드 리뷰 설정"
-status: "in-progress"
-priority: "medium"
-labels: ["infrastructure", "ci-cd"]
-assignee: ""
-branch: "chore/008-coderabbit-setup"
-phase: "Phase 0"
-created: "2026-05-07"
-updated: "2026-05-07"
+id: '008-coderabbit-setup'
+title: '[Phase 0] CodeRabbit AI 코드 리뷰 설정'
+status: 'in-progress'
+priority: 'medium'
+labels: ['infrastructure', 'ci-cd']
+assignee: ''
+branch: 'chore/008-coderabbit-setup'
+phase: 'Phase 0'
+created: '2026-05-07'
+updated: '2026-05-07'
 ---
 
 ## 설명 (Description)

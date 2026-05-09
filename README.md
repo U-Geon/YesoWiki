@@ -5,28 +5,28 @@
 
 ## 🚀 Tech Stack
 
-| 분류 | 기술 |
-|------|------|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
-| Database | PostgreSQL (Supabase) |
-| ORM | Prisma 7 |
-| Package Manager | pnpm |
-| Deployment | Vercel |
+| 분류            | 기술                    |
+| --------------- | ----------------------- |
+| Framework       | Next.js 14 (App Router) |
+| Language        | TypeScript              |
+| Styling         | Tailwind CSS            |
+| Database        | PostgreSQL (Supabase)   |
+| ORM             | Prisma 7                |
+| Package Manager | pnpm                    |
+| Deployment      | Vercel                  |
 
 ## 🤖 AI Multi-Agent Architecture
 
 이 프로젝트는 AI 기반의 **멀티 에이전트 개발 아키텍처**를 채택하여 개발됩니다.
 자세한 구조는 `CLAUDE.md`와 `.agents/` 디렉토리를 참고하세요.
 
-| 에이전트 | 역할 |
-|---------|------|
-| Builder | 요구사항 분석 및 Plan 작성 → GitHub Issue/브랜치 자동 생성 |
-| Analyzer | 복잡한 비즈니스 로직 심층 분석 |
-| Coder | Vercel Best Practices 기반 코드 구현 |
-| Reviewer | 보안, 컨벤션, SSOT 검증 + 피드백 루프 |
-| Doc Writer | 문서화 및 `steering.md` 지속 학습 |
+| 에이전트   | 역할                                                       |
+| ---------- | ---------------------------------------------------------- |
+| Builder    | 요구사항 분석 및 Plan 작성 → GitHub Issue/브랜치 자동 생성 |
+| Analyzer   | 복잡한 비즈니스 로직 심층 분석                             |
+| Coder      | Vercel Best Practices 기반 코드 구현                       |
+| Reviewer   | 보안, 컨벤션, SSOT 검증 + 피드백 루프                      |
+| Doc Writer | 문서화 및 `steering.md` 지속 학습                          |
 
 ## 🛠 Getting Started
 
@@ -46,10 +46,10 @@ cp .env.example .env
 
 `.env` 파일을 열어 아래 두 가지 값을 Supabase 대시보드에서 복사하여 입력합니다.
 
-| 변수 | 설명 | Supabase 위치 |
-|------|------|---------------|
-| `DATABASE_URL` | 앱 구동용 — Transaction Pooler (포트 `6543`) | Project Settings → Database → Connection string |
-| `DIRECT_URL` | DB 마이그레이션용 — Direct Connection (포트 `5432`) | 위와 동일, "Use connection pooling" 해제 시 노출 |
+| 변수           | 설명                                                | Supabase 위치                                    |
+| -------------- | --------------------------------------------------- | ------------------------------------------------ |
+| `DATABASE_URL` | 앱 구동용 — Transaction Pooler (포트 `6543`)        | Project Settings → Database → Connection string  |
+| `DIRECT_URL`   | DB 마이그레이션용 — Direct Connection (포트 `5432`) | 위와 동일, "Use connection pooling" 해제 시 노출 |
 
 > [!IMPORTANT]
 > 두 값 모두 `postgres.[프로젝트ID]` 형식의 사용자 이름을 포함해야 합니다.
@@ -72,10 +72,10 @@ CI 빌드 및 Vercel 프로덕션 배포가 정상 작동하려면 **GitHub Repo
 
 > **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
 
-| Secret 이름 | 값 |
-|------------|----|
+| Secret 이름    | 값                                               |
+| -------------- | ------------------------------------------------ |
 | `DATABASE_URL` | `.env`의 `DATABASE_URL` 값 (Pooler, 포트 `6543`) |
-| `DIRECT_URL` | `.env`의 `DIRECT_URL` 값 (Direct, 포트 `5432`) |
+| `DIRECT_URL`   | `.env`의 `DIRECT_URL` 값 (Direct, 포트 `5432`)   |
 
 > [!WARNING]
 > `DIRECT_URL`이 누락되면 CI 빌드 시 `PrismaConfigEnvError: Cannot resolve environment variable: DIRECT_URL` 에러가 발생합니다.

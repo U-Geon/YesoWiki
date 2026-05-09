@@ -44,10 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               📖 예소위키
             </a>
             <nav style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <a
-                href="/wiki"
-                className="nav-link"
-              >
+              <a href="/wiki" className="nav-link">
                 문서 목록
               </a>
               <a

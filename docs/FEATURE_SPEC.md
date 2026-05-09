@@ -35,12 +35,12 @@ src/app/
 
 ### 2.1. 문서 목록 (`GET /wiki`)
 
-| 항목 | 내용 |
-|------|------|
-| 컴포넌트 타입 | Server Component (async) |
-| 데이터 소스 | Prisma 직접 조회 (`db.document.findMany`) |
-| 정렬 | `updatedAt DESC` (최근 수정순) |
-| 표시 항목 | 제목, 작성자, 최근 수정일 |
+| 항목          | 내용                                      |
+| ------------- | ----------------------------------------- |
+| 컴포넌트 타입 | Server Component (async)                  |
+| 데이터 소스   | Prisma 직접 조회 (`db.document.findMany`) |
+| 정렬          | `updatedAt DESC` (최근 수정순)            |
+| 표시 항목     | 제목, 작성자, 최근 수정일                 |
 
 **데이터 흐름**
 
@@ -55,12 +55,12 @@ src/app/
 
 ### 2.2. 문서 상세 (`GET /wiki/[title]`)
 
-| 항목 | 내용 |
-|------|------|
-| 컴포넌트 타입 | Server Component (async) |
-| URL 파라미터 | `title`: 문서 제목 (URL 디코딩 필요) |
-| 존재하지 않는 문서 | `notFound()` 호출 → `not-found.tsx` 렌더링 |
-| 마크다운 렌더링 | `react-markdown` + `rehype-sanitize` (XSS 방지 필수) |
+| 항목               | 내용                                                 |
+| ------------------ | ---------------------------------------------------- |
+| 컴포넌트 타입      | Server Component (async)                             |
+| URL 파라미터       | `title`: 문서 제목 (URL 디코딩 필요)                 |
+| 존재하지 않는 문서 | `notFound()` 호출 → `not-found.tsx` 렌더링           |
+| 마크다운 렌더링    | `react-markdown` + `rehype-sanitize` (XSS 방지 필수) |
 
 **백링크 처리**
 
@@ -79,13 +79,13 @@ src/app/
 
 ### 2.3. 문서 생성 (`POST` via Server Action)
 
-| 항목 | 내용 |
-|------|------|
-| 진입점 | `/wiki/new` 페이지의 `<form action={createDocument}>` |
-| Server Action 위치 | `src/app/wiki/actions.ts` |
-| 유효성 검사 | `title` 필수, 공백만 불가, 중복 제목 불가 |
-| 성공 시 | `redirect('/wiki/[생성된 title]')` |
-| 실패 시 | 에러 메시지 반환 (React 18 `useFormState` 활용) |
+| 항목               | 내용                                                  |
+| ------------------ | ----------------------------------------------------- |
+| 진입점             | `/wiki/new` 페이지의 `<form action={createDocument}>` |
+| Server Action 위치 | `src/app/wiki/actions.ts`                             |
+| 유효성 검사        | `title` 필수, 공백만 불가, 중복 제목 불가             |
+| 성공 시            | `redirect('/wiki/[생성된 title]')`                    |
+| 실패 시            | 에러 메시지 반환 (React 18 `useFormState` 활용)       |
 
 **Server Action 로직**
 
@@ -105,12 +105,12 @@ createDocument(prevState, formData)
 
 ### 2.4. 문서 수정 (`PUT` via Server Action)
 
-| 항목 | 내용 |
-|------|------|
-| 진입점 | `/wiki/[title]/edit` 페이지 |
-| Server Action 위치 | `src/app/wiki/actions.ts` |
-| 히스토리 저장 | **수정 전** 현재 content를 `DocumentHistory`에 먼저 백업 |
-| 성공 시 | `redirect('/wiki/[title]')` |
+| 항목               | 내용                                                     |
+| ------------------ | -------------------------------------------------------- |
+| 진입점             | `/wiki/[title]/edit` 페이지                              |
+| Server Action 위치 | `src/app/wiki/actions.ts`                                |
+| 히스토리 저장      | **수정 전** 현재 content를 `DocumentHistory`에 먼저 백업 |
+| 성공 시            | `redirect('/wiki/[title]')`                              |
 
 **Server Action 로직 (트랜잭션 필수)**
 
@@ -135,23 +135,23 @@ updateDocument(prevState, formData)
 
 ### 2.5. 문서 수정 이력 (`GET /wiki/[title]/history`)
 
-| 항목 | 내용 |
-|------|------|
-| 컴포넌트 타입 | Server Component |
-| 데이터 소스 | `db.documentHistory.findMany({ where: { documentId }, orderBy: { createdAt: 'desc' } })` |
-| 표시 항목 | 수정 일시, 편집자 IP/닉네임, 내용 미리보기(앞 100자) |
+| 항목          | 내용                                                                                     |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| 컴포넌트 타입 | Server Component                                                                         |
+| 데이터 소스   | `db.documentHistory.findMany({ where: { documentId }, orderBy: { createdAt: 'desc' } })` |
+| 표시 항목     | 수정 일시, 편집자 IP/닉네임, 내용 미리보기(앞 100자)                                     |
 
 ---
 
 ## 3. 공통 컴포넌트 명세
 
-| 컴포넌트 | 경로 | 타입 | 역할 |
-|---------|------|------|------|
-| `NewWikiForm` | `src/app/wiki/new/NewWikiForm.tsx` | Client | 새 문서 작성 폼 (`useFormState`) |
-| `EditForm` | `src/app/wiki/[title]/edit/EditForm.tsx` | Client | 문서 수정 폼 (`useFormState`) |
-| `MarkdownRenderer` | `src/components/MarkdownRenderer.tsx` | **Server** | react-markdown + XSS sanitize 래퍼 |
-| `SubmitButton` | `src/components/SubmitButton.tsx` | Client | 폼 제출 버튼 (`useFormStatus` 활용) |
-| `BacklinkParser` | `src/lib/backlink.ts` | 유틸 | `[[제목]]` → `<a>` 변환 로직 |
+| 컴포넌트           | 경로                                     | 타입       | 역할                                |
+| ------------------ | ---------------------------------------- | ---------- | ----------------------------------- |
+| `NewWikiForm`      | `src/app/wiki/new/NewWikiForm.tsx`       | Client     | 새 문서 작성 폼 (`useFormState`)    |
+| `EditForm`         | `src/app/wiki/[title]/edit/EditForm.tsx` | Client     | 문서 수정 폼 (`useFormState`)       |
+| `MarkdownRenderer` | `src/components/MarkdownRenderer.tsx`    | **Server** | react-markdown + XSS sanitize 래퍼  |
+| `SubmitButton`     | `src/components/SubmitButton.tsx`        | Client     | 폼 제출 버튼 (`useFormStatus` 활용) |
+| `BacklinkParser`   | `src/lib/backlink.ts`                    | 유틸       | `[[제목]]` → `<a>` 변환 로직        |
 
 ---
 
