@@ -1,9 +1,10 @@
 'use client'
 
 import { useFormState } from 'react-dom'
+
 import { updateDocument } from '@/app/wiki/actions'
-import SubmitButton from '@/components/SubmitButton'
 import MarkdownEditor from '@/components/MarkdownEditor'
+import SubmitButton from '@/components/SubmitButton'
 
 interface Props {
   documentId: number
@@ -75,6 +76,7 @@ export default function EditForm({ documentId, title, initialContent }: Props) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <label
+          htmlFor="content"
           style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}
         >
           내용 (마크다운)

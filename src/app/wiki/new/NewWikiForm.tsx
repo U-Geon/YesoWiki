@@ -1,10 +1,11 @@
 'use client'
 
-import { useFormState } from 'react-dom'
-import { createDocument } from '@/app/wiki/actions'
-import SubmitButton from '@/components/SubmitButton'
-import MarkdownEditor from '@/components/MarkdownEditor'
 import Link from 'next/link'
+import { useFormState } from 'react-dom'
+
+import { createDocument } from '@/app/wiki/actions'
+import MarkdownEditor from '@/components/MarkdownEditor'
+import SubmitButton from '@/components/SubmitButton'
 
 const initialState = { error: '' }
 
@@ -82,6 +83,7 @@ export default function NewWikiForm() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <label
+          htmlFor="content"
           style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}
         >
           내용 (마크다운) <span style={{ color: 'var(--red)' }}>*</span>
