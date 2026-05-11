@@ -13,28 +13,12 @@ export default function NewWikiForm() {
   const [state, formAction] = useFormState(createDocument, initialState)
 
   return (
-    <form action={formAction} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {state?.error && (
-        <div
-          style={{
-            background: '#2d1515',
-            border: '1px solid #6b2323',
-            color: 'var(--red)',
-            padding: '0.75rem 1rem',
-            borderRadius: '8px',
-            fontSize: '0.9rem',
-          }}
-        >
-          {state.error}
-        </div>
-      )}
+    <form action={formAction} className="wiki-form">
+      {state?.error && <div className="form-error">{state.error}</div>}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <label
-          htmlFor="title"
-          style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}
-        >
-          문서 제목 <span style={{ color: 'var(--red)' }}>*</span>
+      <div className="form-field">
+        <label htmlFor="title" className="form-label">
+          문서 제목 <span className="form-required">*</span>
         </label>
         <input
           id="title"
@@ -42,25 +26,13 @@ export default function NewWikiForm() {
           type="text"
           required
           placeholder="예: 류건, 예소, 거제 여행"
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            padding: '0.65rem 1rem',
-            color: 'var(--text-primary)',
-            fontSize: '1rem',
-            outline: 'none',
-            width: '100%',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <label
-          htmlFor="editorName"
-          style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}
-        >
-          닉네임 <span style={{ color: 'var(--text-muted)' }}>(선택)</span>
+      <div className="form-field">
+        <label htmlFor="editorName" className="form-label">
+          닉네임 <span className="form-optional">(선택)</span>
         </label>
         <input
           id="editorName"
@@ -68,25 +40,13 @@ export default function NewWikiForm() {
           type="text"
           placeholder="익명으로 남기려면 비워두세요"
           maxLength={30}
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            padding: '0.65rem 1rem',
-            color: 'var(--text-primary)',
-            fontSize: '0.95rem',
-            outline: 'none',
-            width: '100%',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <label
-          htmlFor="content"
-          style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}
-        >
-          내용 (마크다운) <span style={{ color: 'var(--red)' }}>*</span>
+      <div className="form-field">
+        <label htmlFor="content" className="form-label">
+          내용 (마크다운) <span className="form-required">*</span>
         </label>
         <MarkdownEditor
           id="content"
@@ -96,19 +56,8 @@ export default function NewWikiForm() {
         />
       </div>
 
-      <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
-        <Link
-          href="/wiki"
-          style={{
-            color: 'var(--text-secondary)',
-            textDecoration: 'none',
-            padding: '0.6rem 1.25rem',
-            borderRadius: '8px',
-            border: '1px solid var(--border)',
-            background: 'var(--bg-card)',
-            fontSize: '0.9rem',
-          }}
-        >
+      <div className="form-actions">
+        <Link href="/wiki" className="btn-ghost">
           취소
         </Link>
         <SubmitButton text="문서 저장" pendingText="저장 중..." />
