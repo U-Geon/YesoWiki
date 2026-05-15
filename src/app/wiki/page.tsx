@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+
 import { db } from '@/lib/prisma'
 
 export const metadata: Metadata = { title: '문서 목록' }
@@ -15,106 +17,47 @@ export default async function WikiListPage() {
   }))
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '2rem',
-        }}
-      >
+    <div className="page-container">
+      {/* 페이지 헤더 */}
+      <div className="page-header">
         <div>
-          <h1
-            style={{
-              fontSize: '1.6rem',
-              fontWeight: 700,
-              color: '#c7d0ff',
-              margin: 0,
-            }}
-          >
-            문서 목록
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.3rem' }}>
-            총 {documents.length}개의 문서
-          </p>
+          <h1 className="page-title">문서 목록</h1>
+          <p className="page-subtitle">총 {documents.length}개의 문서</p>
         </div>
-        <a
-          href="/wiki/new"
-          style={{
-            background: 'var(--accent)',
-            color: '#fff',
-            textDecoration: 'none',
-            padding: '0.55rem 1.1rem',
-            borderRadius: '8px',
-            fontWeight: 500,
-            fontSize: '0.9rem',
-          }}
-        >
+        <Link href="/wiki/new" className="btn-primary">
           + 새 문서
-        </a>
+        </Link>
       </div>
 
+      {/* 문서 없음 */}
       {documents.length === 0 ? (
-        <div
-          style={{
-            textAlign: 'center',
-            padding: '5rem 0',
-            color: 'var(--text-muted)',
-          }}
-        >
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📄</div>
-          <p>아직 문서가 없어요. 첫 번째 문서를 작성해보세요!</p>
-          <a
-            href="/wiki/new"
-            style={{
-              display: 'inline-block',
-              marginTop: '1rem',
-              color: 'var(--accent-hover)',
-              textDecoration: 'none',
-            }}
-          >
-            문서 작성하러 가기 →
-          </a>
+        <div className="empty-state">
+          <div className="empty-icon">📄</div>
+          <p className="empty-text">아직 문서가 없어요. 첫 번째 문서를 작성해보세요!</p>
+          <Link href="/wiki/new" className="btn-primary">
+            + 새 문서 작성
+          </Link>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <div className="doc-list">
           {documents.map((doc) => {
-            const editor = doc.editorAlias
             const updatedAt = new Date(doc.updatedAt).toLocaleDateString('ko-KR', {
               year: 'numeric',
-              month: 'long',
+              month: 'short',
               day: 'numeric',
             })
             return (
-              <a
+              <Link
                 key={doc.id}
                 href={`/wiki/${encodeURIComponent(doc.title)}`}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '10px',
-                  padding: '1rem 1.25rem',
-                  textDecoration: 'none',
-                  transition: 'border-color 0.15s, background 0.15s',
-                }}
+                className="doc-card"
               >
-                <span
-                  style={{
-                    fontWeight: 600,
-                    color: 'var(--text-primary)',
-                    fontSize: '1rem',
-                  }}
-                >
-                  {doc.title}
+                <span className="doc-card__icon">📄</span>
+                <span className="doc-card__title">{doc.title}</span>
+                <span className="doc-card__meta">
+                  {doc.editorAlias} · {updatedAt}
                 </span>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', flexShrink: 0 }}>
-                  {editor} · {updatedAt}
-                </span>
-              </a>
+              </Link>
             )
           })}
         </div>

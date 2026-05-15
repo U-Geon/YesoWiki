@@ -150,3 +150,12 @@ feat/xxx          fix/xxx        chore/xxx ...
 - 모든 컴포넌트는 기본적으로 **Server Component**입니다. `"use client"`는 반드시 필요한 최하단(Leaf) 컴포넌트에만 사용합니다.
 - 데이터 변이(Mutation)는 API Route가 아닌 **Server Actions**를 우선 사용합니다.
 - 각 라우트 세그먼트에 `loading.tsx`와 `error.tsx`를 배치하여 UX를 보장합니다.
+
+### 5.4. CSS 스타일 규칙
+
+- **CSS 사용**: 전역 스타일은 `src/app/globals.css`에서 관리합니다. Tailwind CSS를 기본으로 사용하되, 프리미엄 UI 구현을 위한 복잡한 스타일은 Vanilla CSS를 병행합니다.
+- **!important 지양**: `!important` 사용은 절대 금지합니다. 스타일 충돌 시 선택자 우선순위(Specificity)를 높이거나(예: `a.btn-primary`), 정의 순서를 조정하여 해결합니다.
+- **명명 규칙**: CSS 클래스는 BEM(Block Element Modifier) 패턴을 권장합니다 (예: `.md-editor`, `.md-editor__header`, `.md-editor__btn--active`).
+- **테마 대응**: `[data-theme]` 속성을 활용하여 라이트/다크 모드 변수를 정의하고 사용합니다.
+- **성능 최적화**: 전역 와일드카드(`*`) 트랜지션은 지양하며, 애니메이션이 필요한 특정 요소에만 `transition`을 적용합니다.
+
