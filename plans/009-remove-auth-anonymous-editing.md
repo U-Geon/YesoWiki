@@ -1,14 +1,14 @@
 ---
 id: '009-remove-auth-anonymous-editing'
 title: '[Phase 0] 인증 시스템 제거 및 익명 편집 정책 도입'
-status: 'in-progress'
+status: 'done'
 priority: 'high'
 labels: ['architecture', 'breaking-change']
 assignee: ''
 branch: 'chore/009-anonymous-editing'
 phase: 'Phase 0'
 created: '2026-05-07'
-updated: '2026-05-07'
+updated: '2026-05-15'
 ---
 
 ## 설명 (Description)
@@ -19,15 +19,15 @@ updated: '2026-05-07'
 
 ## 작업 항목 (Tasks)
 
-- [ ] `docs/REQUIREMENTS.md` — §2.3 인증 요구사항을 익명 편집 정책으로 변경
-- [ ] `prisma/schema.prisma` — `User` 모델 제거, `Document`/`DocumentHistory`의 `authorId` → `editorIp` + `editorName`
-- [ ] `docs/ERD.md` — 변경된 스키마에 맞게 ERD 갱신
-- [ ] `docs/FEATURE_SPEC.md` — 인증 관련 로직 제거, 보안 체크리스트 갱신
-- [ ] `plans/004-auth-system.md` — 상태를 `cancelled`로 변경
-- [ ] `.agents/memory/steering.md` — 아키텍처 결정 기록
+- [x] `docs/REQUIREMENTS.md` — §2.3 인증 요구사항을 익명 편집 정책으로 변경
+- [x] `prisma/schema.prisma` — `User` 모델 제거, `Document`/`DocumentHistory`의 `authorId` → `editorIp` + `editorName`
+- [x] `docs/ERD.md` — 변경된 스키마에 맞게 ERD 갱신
+- [x] `docs/FEATURE_SPEC.md` — 인증 관련 로직 제거, 보안 체크리스트 갱신
+- [x] `plans/004-auth-system.md` — 상태를 `cancelled`로 변경
+- [x] `.agents/memory/steering.md` — 아키텍처 결정 기록
 
 ## 수락 조건 (Acceptance Criteria)
 
-- [ ] `User` 모델이 완전히 제거되어야 함
-- [ ] 문서 생성/수정 시 편집자의 IP와 선택적 닉네임이 저장되어야 함
-- [ ] 모든 관련 문서(ERD, FEATURE_SPEC, REQUIREMENTS)가 일관되게 갱신되어야 함 (SSOT 위반 없음)
+- [x] `User` 모델이 완전히 제거되어야 함
+- [x] 문서 생성/수정 시 편집자의 IP와 선택적 닉네임이 저장되어야 함
+- [x] 모든 관련 문서(ERD, FEATURE_SPEC, REQUIREMENTS)가 일관되게 갱신되어야 함 (SSOT 위반 없음)

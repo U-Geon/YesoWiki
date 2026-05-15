@@ -1,14 +1,14 @@
 ---
 id: '002-wiki-crud'
 title: '[Phase 1] 위키 문서 CRUD 기능 구현'
-status: 'open'
+status: 'done'
 priority: 'high'
 labels: ['feature', 'backend', 'frontend']
 assignee: ''
 branch: 'feat/002-wiki-crud'
 phase: 'Phase 1'
 created: '2026-04-30'
-updated: '2026-04-30'
+updated: '2026-05-15'
 ---
 
 ## 설명 (Description)
@@ -18,20 +18,20 @@ updated: '2026-04-30'
 
 ## 작업 항목 (Tasks)
 
-- [ ] Prisma Client 싱글턴 설정 (`src/lib/prisma.ts`)
-- [ ] 위키 문서 목록 페이지 (`/wiki`) — Server Component
-- [ ] 위키 문서 상세 페이지 (`/wiki/[title]`) — Dynamic Route
-- [ ] 위키 문서 생성/수정 페이지 (`/wiki/new`, `/wiki/[title]/edit`)
-- [ ] Server Actions를 통한 문서 생성/수정 로직
-- [ ] 마크다운 렌더링 (XSS 방지 포함)
-- [ ] `loading.tsx` 스켈레톤 UI 구현
+- [x] Prisma Client 싱글턴 설정 (`src/lib/prisma.ts`)
+- [x] 위키 문서 목록 페이지 (`/wiki`) — Server Component
+- [x] 위키 문서 상세 페이지 (`/wiki/[title]`) — Dynamic Route
+- [x] 위키 문서 생성/수정 페이지 (`/wiki/new`, `/wiki/[title]/edit`)
+- [x] Server Actions를 통한 문서 생성/수정 로직
+- [x] 마크다운 렌더링 (XSS 방지 포함)
+- [x] `loading.tsx` 스켈레톤 UI 구현
 
 ## 수락 조건 (Acceptance Criteria)
 
-- [ ] 문서를 생성하고 바로 읽을 수 있어야 함
-- [ ] 문서 수정 시 기존 내용이 `DocumentHistory`에 백업되어야 함
-- [ ] Server Component 기반으로 초기 로딩이 빠르게 동작해야 함
-- [ ] XSS 공격이 불가능해야 함 (Reviewer 보안 검증 통과)
+- [x] 문서를 생성하고 바로 읽을 수 있어야 함
+- [x] 문서 수정 시 기존 내용이 `DocumentHistory`에 백업되어야 함
+- [x] Server Component 기반으로 초기 로딩이 빠르게 동작해야 함
+- [x] XSS 공격이 불가능해야 함 (Reviewer 보안 검증 통과)
 
 ## 참고 자료 (References)
 

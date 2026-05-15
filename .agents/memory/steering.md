@@ -5,13 +5,18 @@
 
 ## 현재 프로젝트 상태 (Current Phase)
 
-- **Phase**: Phase 2 (프리미엄 UI/UX 및 다크모드 적용) 진행 중
-- **현재 브랜치**: `feat/005-premium-ui`
+- **Phase**: Phase 2 완료 → Phase 2 버그 수정 (`#011`) 진입 예정
+- **현재 브랜치**: `develop` (PR #23 머지 완료 — `feat/005-premium-ui` → `develop`)
 - **진행 상황**:
-  - 기존 Phase 1 (위키 기능) 완료 및 `develop` 통합
-  - `feat/005-premium-ui`에서 다크/라이트 모드 테마, 반응형 헤더, 랜딩 페이지, 위키 목록/상세 페이지 프리미엄 UI 적용 완료
-  - 프리미엄 UI 1, 2차 작업 반영 (UI/CSS 성능 최적화 및 스타일 컨벤션 재정립)
-  - 남아있는 UI 버그 수정을 위한 `plans/011-fix-premium-ui-bugs.md` 이슈 문서화 완료
+  - ✅ Phase 0: 멀티 에이전트 시스템 구축 완료
+  - ✅ Phase 1: 위키 CRUD, 백링크, 마크다운 에디터 툴바 완료 → `develop` 통합
+  - ✅ Phase 2 (#005): 프리미엄 UI/UX 전역 리디자인 완료 → `develop` 통합 (PR #23)
+    - ThemeProvider, Header 컴포넌트 신설
+    - 다크/라이트 모드 CSS 변수 기반 테마 시스템
+    - 홈 랜딩 페이지, 문서 목록/상세/폼 전면 리디자인
+    - CSS !important 제거, 히어로 그라디언트 CSS 변수화
+    - 에이전트 파이프라인 문서 (FEATURE_SPEC, ERD, roles) 전면 갱신
+  - 🔜 #011 (bug): 취소 버튼 패딩 미적용, 라이트모드 FOUC 수정 예정
 
 ## 시스템 학습 및 아키텍처 결정 사항 (Learnings & Decisions)
 
