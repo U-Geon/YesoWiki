@@ -13,8 +13,12 @@ export default function Header() {
 
   const isDark = resolvedTheme === 'dark'
   const toggle = () => setTheme(isDark ? 'light' : 'dark')
-  const themeIcon = isDark ? '☀️' : '🌙'
-  // 마운트 전에는 버튼을 숨겨 잘못된 아이콘이 노출되는 깜빡임 방지
+  
+  // 하이드레이션 에러를 방지하기 위해 마운트 전에는 서버와 동일한 고정값을 렌더링합니다.
+  // 동시에 visibility: hidden으로 숨겨두어 시각적인 깜빡임(☀️ -> 🌙)을 방지합니다.
+  const themeIcon = mounted ? (isDark ? '☀️' : '🌙') : '☀️'
+  const themeLabel = mounted ? (isDark ? '라이트 모드로 전환' : '다크 모드로 전환') : '다크 모드로 전환'
+  const themeTitle = mounted ? (isDark ? '라이트 모드' : '다크 모드') : '다크 모드'
   const toggleStyle = mounted ? undefined : { visibility: 'hidden' as const }
 
   return (
@@ -39,8 +43,8 @@ export default function Header() {
           <button
             className="theme-toggle"
             onClick={toggle}
-            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            title={isDark ? '라이트 모드' : '다크 모드'}
+            aria-label={themeLabel}
+            title={themeTitle}
             style={toggleStyle}
           >
             {themeIcon}
@@ -52,7 +56,7 @@ export default function Header() {
           <button
             className="theme-toggle"
             onClick={toggle}
-            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            aria-label={themeLabel}
             style={toggleStyle}
           >
             {themeIcon}
