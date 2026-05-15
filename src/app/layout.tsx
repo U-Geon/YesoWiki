@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
+import { ThemeProvider } from 'next-themes'
 
 import Header from '@/components/Header'
-import { ThemeProvider } from '@/components/ThemeProvider'
 
 import './globals.css'
 
@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" data-theme="dark" suppressHydrationWarning>
+    <html lang="ko" suppressHydrationWarning>
       <body className="antialiased">
-        <ThemeProvider>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" disableTransitionOnChange>
           <Header />
           <main style={{ minHeight: 'calc(100vh - 60px)' }}>{children}</main>
         </ThemeProvider>

@@ -168,7 +168,7 @@ updateDocument(prevState, formData)
 | 컴포넌트           | 경로                                     | 타입       | 역할                                          |
 | ------------------ | ---------------------------------------- | ---------- | --------------------------------------------- |
 | `Header`           | `src/components/Header.tsx`              | Client     | 반응형 헤더 (네비게이션, 테마 토글, 햄버거 메뉴) |
-| `ThemeProvider`    | `src/components/ThemeProvider.tsx`       | Client     | SSR-safe 다크/라이트 모드 컨텍스트 관리         |
+| `ThemeProvider`    | `next-themes`                            | Client     | SSR-safe 다크/라이트 모드 컨텍스트 관리         |
 | `MarkdownEditor`   | `src/components/MarkdownEditor.tsx`      | Client     | 마크다운 작성 에디터 (툴바 + split/tab 뷰)     |
 | `MarkdownRenderer` | `src/components/MarkdownRenderer.tsx`    | **Server** | react-markdown + XSS sanitize 래퍼              |
 | `SubmitButton`     | `src/components/SubmitButton.tsx`        | Client     | 폼 제출 버튼 (`useFormStatus` 활용)            |
@@ -183,7 +183,7 @@ updateDocument(prevState, formData)
 | 항목          | 내용                                                                        |
 | ------------- | --------------------------------------------------------------------------- |
 | 구현 방식     | `[data-theme='dark'|'light']` HTML 속성 + CSS 변수                          |
-| 상태 관리     | `ThemeProvider` (React Context + `localStorage` 영속성)                     |
+| 상태 관리     | `next-themes` (다크/라이트 모드 상태 및 `localStorage` 관리 자동화)        |
 | SSR 대응      | `suppressHydrationWarning` 적용 (서버는 `dark`, 클라이언트에서 즉시 교체)   |
 | 기본 테마     | `dark`                                                                      |
 | 토글 위치     | `Header` 컴포넌트 내 버튼                                                   |
