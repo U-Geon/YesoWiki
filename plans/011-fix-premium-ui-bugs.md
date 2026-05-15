@@ -1,7 +1,7 @@
 ---
 id: '011-fix-premium-ui-bugs'
 title: '[Bug] 프리미엄 UI 버그 수정 - 취소 버튼 패딩 및 라이트모드 반짝임(FOUC)'
-status: 'in-progress'
+status: 'done'
 priority: 'high'
 labels: ['bug', 'frontend', 'ux']
 assignee: ''
@@ -32,9 +32,9 @@ updated: '2026-05-15'
 
 ## 수락 조건 (Acceptance Criteria)
 
-- [ ] 취소 버튼이 적절한 크기와 패딩으로 표시되어야 함
-- [ ] 라이트모드 선택 후 다른 페이지로 이동해도 반짝임 없이 라이트모드가 유지되어야 함
-- [ ] `pnpm build` 에러 없이 통과
+- [x] 취소 버튼이 적절한 크기와 패딩으로 표시되어야 함
+- [x] 라이트모드 선택 후 다른 페이지로 이동해도 반짝임 없이 라이트모드가 유지되어야 함
+- [x] `pnpm build` 에러 없이 통과
 
 ## 참고 자료 (References)
 
