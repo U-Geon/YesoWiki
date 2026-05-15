@@ -1,13 +1,15 @@
 'use client'
 
 import Link from 'next/link'
+import { useTheme } from 'next-themes'
 import { useState } from 'react'
 
-import { useTheme } from './ThemeProvider'
-
 export default function Header() {
-  const { theme, toggle } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const isDark = resolvedTheme === 'dark'
+  const toggle = () => setTheme(isDark ? 'light' : 'dark')
 
   return (
     <header className="site-header">
@@ -31,10 +33,10 @@ export default function Header() {
           <button
             className="theme-toggle"
             onClick={toggle}
-            aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            title={theme === 'dark' ? '라이트 모드' : '다크 모드'}
+            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            title={isDark ? '라이트 모드' : '다크 모드'}
           >
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {isDark ? '☀️' : '🌙'}
           </button>
         </nav>
 
@@ -43,9 +45,9 @@ export default function Header() {
           <button
             className="theme-toggle"
             onClick={toggle}
-            aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
           >
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {isDark ? '☀️' : '🌙'}
           </button>
           <button
             className="hamburger"
