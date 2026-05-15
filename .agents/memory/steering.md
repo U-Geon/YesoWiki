@@ -5,8 +5,8 @@
 
 ## 현재 프로젝트 상태 (Current Phase)
 
-- **Phase**: Phase 2 완료 → Phase 2 버그 수정 (`#011`) 진입 예정
-- **현재 브랜치**: `develop` (PR #23 머지 완료 — `feat/005-premium-ui` → `develop`)
+- **Phase**: Phase 2 인프라 최적화 (`#012`) 진행 중
+- **현재 브랜치**: `feat/012-migrate-gemini-code-assist` (PR → develop 머지 대기 중)
 - **진행 상황**:
   - ✅ Phase 0: 멀티 에이전트 시스템 구축 완료
   - ✅ Phase 1: 위키 CRUD, 백링크, 마크다운 에디터 툴바 완료 → `develop` 통합
@@ -16,7 +16,8 @@
     - 홈 랜딩 페이지, 문서 목록/상세/폼 전면 리디자인
     - CSS !important 제거, 히어로 그라디언트 CSS 변수화
     - 에이전트 파이프라인 문서 (FEATURE_SPEC, ERD, roles) 전면 갱신
-  - 🔜 #011 (bug): 취소 버튼 패딩 미적용, 라이트모드 FOUC 수정 예정
+  - 🔜 #011 (bug): 취소 버튼 패딩 미적용, 라이트모드 FOUC 수정 (별도 PR 대기중)
+  - ✅ #012 (infra): 코드 리뷰 에이전트 CodeRabbit → Gemini Code Assist 마이그레이션
 
 ## 시스템 학습 및 아키텍처 결정 사항 (Learnings & Decisions)
 
@@ -27,6 +28,7 @@
 - **2026-05-07**: DB를 MySQL → **Supabase(PostgreSQL)**로 전환. Vercel 배포 호환성 및 무료 티어 활용.
 - **2026-05-07**: ⚠️ **인증 시스템 제거 및 익명 편집 정책 채택**. 나무위키와 동일하게 로그인 없이 누구나 문서 편집 가능. `User` 모델 완전 제거. 편집자는 `editorIp`(서버에서 자동 추출) + `editorName`(선택 입력)으로 식별. `plans/004-auth-system.md` → `cancelled`.
 - **2026-05-15**: **CSS 스타일링 및 최적화 정책 정립**. Tailwind CSS를 기본으로 쓰되, 프리미엄 UI 등 복잡한 테마 시스템에는 `globals.css` 기반 Vanilla CSS 변수를 병행함. 성능 저하를 유발하는 전역 트랜지션(`*`, `*::before`, `*::after`) 사용을 금지하고 개별 선택자 단위로 최적화. `!important` 사용을 절대 금지하며 선택자 우선순위(Specificity)를 활용하고, 클래스 네이밍에 BEM(Block Element Modifier) 패턴 도입 (`CLAUDE.md` 5.4 항목 반영).
+- **2026-05-15**: **자동화 코드 리뷰 에이전트 교체**. 기존 CodeRabbit에서 Gemini Code Assist로 코드 리뷰 도구를 마이그레이션함. `.coderabbit.yaml`을 삭제하고, `.gemini/config.yaml`과 `.gemini/styleguide.md`를 도입하여 PR 요약 및 리뷰 시 프로젝트별 코딩 컨벤션(RSC, Prisma 등)을 강제하도록 설정.
 
 ## 향후 주의사항 (Watch-outs)
 
