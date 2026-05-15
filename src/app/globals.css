@@ -42,20 +42,30 @@
 }
 
 /* ─── 테마 전환 트랜지션 ─────────────────────────────── */
-*,
-*::before,
-*::after {
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.15s ease;
-}
-
-/* 트랜지션 제외: 에디터 및 애니메이션 요소 */
+body,
+header,
+main,
+footer,
+nav,
+section,
+article,
+aside,
+div,
+span,
+p,
+li,
+a,
+button,
+input,
+textarea,
+.doc-card,
+.backlink-chip,
+.form-input,
 .md-textarea,
 .skeleton,
-button,
-a {
+.md-editor,
+.md-editor__header,
+.md-editor__pane {
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease,
@@ -82,13 +92,15 @@ body {
 }
 
 /* ─── 공통 버튼 ─────────────────────────────────────── */
-.btn-primary {
+.btn-primary,
+a.btn-primary,
+button.btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   background: var(--accent);
-  color: #fff !important;
-  text-decoration: none !important;
+  color: #fff;
+  text-decoration: none;
   font-size: 0.9rem;
   font-weight: 600;
   padding: 0.45rem 1rem;
