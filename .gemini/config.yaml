@@ -1,0 +1,15 @@
+# Gemini Code Assist on GitHub - Configuration
+
+have_fun: false
+code_review:
+  disable: false
+  comment_severity_threshold: LOW
+  max_review_comments: 30
+
+ignore_patterns:
+  # 코드가 아닌 문서/설정/에이전트 파일 변경 시 코드 리뷰 불필요
+  - "plans/**"
+  - "docs/**"
+  - ".agents/**"
+  - "*.md"
+  - "pnpm-lock.yaml"
