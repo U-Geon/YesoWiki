@@ -13,8 +13,9 @@ export default function Header() {
 
   const isDark = resolvedTheme === 'dark'
   const toggle = () => setTheme(isDark ? 'light' : 'dark')
-  // 마운트 전: 서버와 동일한 기본값(dark 기준 ☀️)으로 고정하여 하이드레이션 불일치 방지
-  const themeIcon = mounted ? (isDark ? '☀️' : '🌙') : '☀️'
+  const themeIcon = isDark ? '☀️' : '🌙'
+  // 마운트 전에는 버튼을 숨겨 잘못된 아이콘이 노출되는 깜빡임 방지
+  const toggleStyle = mounted ? undefined : { visibility: 'hidden' as const }
 
   return (
     <header className="site-header">
@@ -40,6 +41,7 @@ export default function Header() {
             onClick={toggle}
             aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
             title={isDark ? '라이트 모드' : '다크 모드'}
+            style={toggleStyle}
           >
             {themeIcon}
           </button>
@@ -51,6 +53,7 @@ export default function Header() {
             className="theme-toggle"
             onClick={toggle}
             aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            style={toggleStyle}
           >
             {themeIcon}
           </button>
