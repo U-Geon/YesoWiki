@@ -1,14 +1,14 @@
 ---
 id: '011-fix-premium-ui-bugs'
 title: '[Bug] 프리미엄 UI 버그 수정 - 취소 버튼 패딩 및 라이트모드 반짝임(FOUC)'
-status: 'open'
+status: 'in-progress'
 priority: 'high'
 labels: ['bug', 'frontend', 'ux']
 assignee: ''
 branch: 'fix/011-premium-ui-bugs'
 phase: 'Phase 2'
 created: '2026-05-11'
-updated: '2026-05-11'
+updated: '2026-05-15'
 ---
 
 ## 설명 (Description)
