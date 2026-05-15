@@ -2,14 +2,19 @@
 
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   const isDark = resolvedTheme === 'dark'
   const toggle = () => setTheme(isDark ? 'light' : 'dark')
+  // 마운트 전: 서버와 동일한 기본값(dark 기준 ☀️)으로 고정하여 하이드레이션 불일치 방지
+  const themeIcon = mounted ? (isDark ? '☀️' : '🌙') : '☀️'
 
   return (
     <header className="site-header">
@@ -36,7 +41,7 @@ export default function Header() {
             aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
             title={isDark ? '라이트 모드' : '다크 모드'}
           >
-            {isDark ? '☀️' : '🌙'}
+            {themeIcon}
           </button>
         </nav>
 
@@ -47,7 +52,7 @@ export default function Header() {
             onClick={toggle}
             aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
           >
-            {isDark ? '☀️' : '🌙'}
+            {themeIcon}
           </button>
           <button
             className="hamburger"
