@@ -29,7 +29,7 @@
 - **2026-05-07**: ⚠️ **인증 시스템 제거 및 익명 편집 정책 채택**. 나무위키와 동일하게 로그인 없이 누구나 문서 편집 가능. `User` 모델 완전 제거. 편집자는 `editorIp`(서버에서 자동 추출) + `editorName`(선택 입력)으로 식별. `plans/004-auth-system.md` → `cancelled`.
 - **2026-05-15**: **CSS 스타일링 및 최적화 정책 정립**. Tailwind CSS를 기본으로 쓰되, 프리미엄 UI 등 복잡한 테마 시스템에는 `globals.css` 기반 Vanilla CSS 변수를 병행함. 성능 저하를 유발하는 전역 트랜지션(`*`, `*::before`, `*::after`) 사용을 금지하고 개별 선택자 단위로 최적화. `!important` 사용을 절대 금지하며 선택자 우선순위(Specificity)를 활용하고, 클래스 네이밍에 BEM(Block Element Modifier) 패턴 도입 (`CLAUDE.md` 5.4 항목 반영).
 - **2026-05-15**: **자동화 코드 리뷰 에이전트 교체**. 기존 CodeRabbit에서 Gemini Code Assist로 코드 리뷰 도구를 마이그레이션함. `.coderabbit.yaml`을 삭제하고, `.gemini/config.yaml`과 `.gemini/styleguide.md`를 도입하여 PR 요약 및 리뷰 시 프로젝트별 코딩 컨벤션(RSC, Prisma 등)을 강제하도록 설정.
-- **2026-05-15**: **FOUC(Flash of Unstyled Content) 해결 패턴 확립**. Next.js SSR 환경에서 테마(`localStorage` 기반) FOUC는 `<head>` 내 `<Script strategy="beforeInteractive">` 인라인 블로킹 스크립트로 해결. 스크립트는 IIFE로 격리하고, `try-catch`로 `localStorage` 접근 실패 시 기본값(`dark`) 폴백 처리. `html` 태그의 하드코딩된 `data-theme` 제거 후 스크립트가 단독으로 설정하도록 변경.
+- **2026-05-15**: **FOUC(Flash of Unstyled Content) 및 하이드레이션 해결 패턴 확립**. Next.js SSR 환경에서 테마 FOUC를 근본적으로 방지하기 위해 `next-themes` 패키지를 도입 (`ThemeProvider`로 앱 래핑 및 `attribute="data-theme"` 적용). 또한, 초기 클라이언트 렌더링 시 발생하는 테마 속성(텍스트/아이콘) 불일치로 인한 하이드레이션 에러를 막기 위해, 마운트 전에는 `visibility: hidden`으로 요소를 숨기면서 서버와 동일한 고정 텍스트를 렌더링하는 방식을 채택함.
 
 ## 향후 주의사항 (Watch-outs)
 

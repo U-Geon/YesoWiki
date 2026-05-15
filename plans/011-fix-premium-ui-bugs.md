@@ -1,7 +1,7 @@
 ---
 id: '011-fix-premium-ui-bugs'
 title: '[Bug] 프리미엄 UI 버그 수정 - 취소 버튼 패딩 및 라이트모드 반짝임(FOUC)'
-status: 'in-progress'
+status: 'done'
 priority: 'high'
 labels: ['bug', 'frontend', 'ux']
 assignee: ''
@@ -38,17 +38,17 @@ updated: '2026-05-15'
 
 - [x] `.btn-ghost` 패딩 추가
 - [x] 1차 FOUC 수정 (블로킹 스크립트)
-- [ ] `next-themes` 패키지 설치
-- [ ] `layout.tsx` — 커스텀 인라인 스크립트 제거, `next-themes`의 `ThemeProvider` 적용
-- [ ] `src/components/ThemeProvider.tsx` — 파일 삭제 (next-themes로 대체)
-- [ ] `src/components/Header.tsx` — `useTheme` 훅을 `next-themes`에서 import하도록 변경
+- [x] `next-themes` 패키지 설치
+- [x] `layout.tsx` — 커스텀 인라인 스크립트 제거, `next-themes`의 `ThemeProvider` 적용
+- [x] `src/components/ThemeProvider.tsx` — 파일 삭제 (next-themes로 대체)
+- [x] `src/components/Header.tsx` — `useTheme` 훅을 `next-themes`에서 import하도록 변경 및 하이드레이션 오류 해결
 
 ## 수락 조건 (Acceptance Criteria)
 
 - [x] 취소 버튼이 적절한 크기와 패딩으로 표시되어야 함
-- [ ] 라이트모드 선택 후 **새로고침**해도 반짝임 없이 라이트모드가 유지되어야 함
-- [ ] 라이트모드 선택 후 다른 페이지로 이동해도 반짝임 없이 라이트모드가 유지되어야 함
-- [ ] `pnpm build` 에러 없이 통과
+- [x] 라이트모드 선택 후 **새로고침**해도 반짝임 없이 라이트모드가 유지되어야 함
+- [x] 라이트모드 선택 후 다른 페이지로 이동해도 반짝임 없이 라이트모드가 유지되어야 함
+- [x] `pnpm build` 에러 없이 통과
 
 ## 참고 자료 (References)
 
@@ -56,4 +56,3 @@ updated: '2026-05-15'
 - 테마 관련 코드: `src/components/ThemeProvider.tsx`, `src/app/layout.tsx`
 - 버튼 스타일: `src/app/globals.css` (`.btn-ghost`)
 - [next-themes 공식 문서](https://github.com/pacocoursey/next-themes)
-
