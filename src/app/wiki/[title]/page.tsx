@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+
 import { db } from '@/lib/prisma'
 import { parseBacklinksWithExistence, extractBacklinkTitles } from '@/lib/backlink'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let decodedTitle = title
   try {
     decodedTitle = decodeURIComponent(title)
-  } catch (error) {
+  } catch {
     // metadata generation fallback
   }
   return { title: decodedTitle }
@@ -25,7 +26,7 @@ export default async function WikiDetailPage({ params }: Props) {
   let decodedTitle = ''
   try {
     decodedTitle = decodeURIComponent(title)
-  } catch (error) {
+  } catch {
     notFound()
   }
 
@@ -63,63 +64,21 @@ export default async function WikiDetailPage({ params }: Props) {
   })
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+    <div className="page-container page-container--wide">
       {/* 문서 헤더 */}
-      <div
-        style={{
-          borderBottom: '1px solid var(--border)',
-          paddingBottom: '1.25rem',
-          marginBottom: '2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          flexWrap: 'wrap',
-          gap: '1rem',
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              fontSize: '2rem',
-              fontWeight: 700,
-              color: '#c7d0ff',
-              margin: 0,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            {doc.title}
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.4rem' }}>
-            마지막 수정: {editor} · {updatedAt}
-          </p>
+      <div className="doc-header">
+        <div className="doc-header__info">
+          <h1 className="doc-header__title">{doc.title}</h1>
+          <p className="doc-header__meta">마지막 수정: {editor} · {updatedAt}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="doc-header__actions">
           <a
             href={`/wiki/${encodeURIComponent(doc.title)}/history`}
-            style={{
-              color: 'var(--text-secondary)',
-              textDecoration: 'none',
-              fontSize: '0.85rem',
-              padding: '0.4rem 0.8rem',
-              borderRadius: '6px',
-              border: '1px solid var(--border)',
-              background: 'var(--bg-card)',
-            }}
+            className="btn-ghost btn-sm"
           >
             수정 이력
           </a>
-          <a
-            href={`/wiki/${encodeURIComponent(doc.title)}/edit`}
-            style={{
-              background: 'var(--accent)',
-              color: '#fff',
-              textDecoration: 'none',
-              fontSize: '0.85rem',
-              padding: '0.4rem 0.8rem',
-              borderRadius: '6px',
-              fontWeight: 500,
-            }}
-          >
+          <a href={`/wiki/${encodeURIComponent(doc.title)}/edit`} className="btn-primary btn-sm">
             편집
           </a>
         </div>
@@ -130,40 +89,16 @@ export default async function WikiDetailPage({ params }: Props) {
 
       {/* 백링크 목록 */}
       {doc.incomingLinks.length > 0 && (
-        <div
-          style={{
-            marginTop: '3rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid var(--border)',
-          }}
-        >
-          <h2
-            style={{
-              fontSize: '0.9rem',
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-              marginBottom: '0.75rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-            }}
-          >
+        <div className="backlinks">
+          <h2 className="backlinks__heading">
             이 문서를 참조하는 문서 ({doc.incomingLinks.length})
           </h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div className="backlinks__list">
             {doc.incomingLinks.map((link) => (
               <Link
                 key={link.id}
                 href={`/wiki/${encodeURIComponent(link.source.title)}`}
-                style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-secondary)',
-                  textDecoration: 'none',
-                  padding: '0.3rem 0.75rem',
-                  borderRadius: '6px',
-                  fontSize: '0.85rem',
-                  transition: 'border-color 0.15s',
-                }}
+                className="backlink-chip"
               >
                 {link.source.title}
               </Link>

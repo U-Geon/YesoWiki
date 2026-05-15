@@ -1,14 +1,14 @@
 ---
 id: '003-backlink-system'
 title: '[Phase 1] 백링크(Backlink) 시스템 구현'
-status: 'backlog'
+status: 'done'
 priority: 'medium'
 labels: ['feature', 'backend']
 assignee: ''
 branch: 'feat/003-backlink-system'
 phase: 'Phase 1'
 created: '2026-04-30'
-updated: '2026-04-30'
+updated: '2026-05-15'
 ---
 
 ## 설명 (Description)
@@ -17,16 +17,17 @@ updated: '2026-04-30'
 
 ## 작업 항목 (Tasks)
 
-- [ ] `[[문서명]]` 정규식 파서 구현 (`src/lib/wiki-parser.ts`)
-- [ ] Prisma 스키마에 `DocumentLink` 모델 추가 (문서 간 연결 관계)
-- [ ] 문서 저장 시 자동으로 링크를 파싱하여 DB에 반영
-- [ ] 문서 상세 페이지 하단에 "이 문서를 참조하는 문서" 목록 표시
+- [x] `[[문서명]]` 정규식 파서 구현 (`src/lib/backlink.ts`)
+- [x] Prisma 스키마에 `DocumentLink` 모델 추가 (문서 간 연결 관계)
+- [x] 문서 저장 시 자동으로 링크를 파싱하여 DB에 반영
+- [x] 문서 상세 페이지 하단에 "이 문서를 참조하는 문서" 목록 표시
+- [x] `@@index([targetId])`로 백링크 조회 성능 최적화
 
 ## 수락 조건 (Acceptance Criteria)
 
-- [ ] `[[존재하는 문서]]` 입력 시 클릭 가능한 링크로 렌더링
-- [ ] `[[존재하지 않는 문서]]` 입력 시 "새 문서 만들기" 링크로 렌더링 (빨간 링크)
-- [ ] 문서 하단에 Backlink 목록이 정확히 표시
+- [x] `[[존재하는 문서]]` 입력 시 클릭 가능한 링크로 렌더링
+- [x] `[[존재하지 않는 문서]]` 입력 시 "새 문서 만들기" 링크로 렌더링 (빨간 링크)
+- [x] 문서 하단에 Backlink 목록이 정확히 표시
 
 ## 참고 자료 (References)
 
