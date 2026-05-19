@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormState } from 'react-dom'
+import { useActionState } from 'react'
 
 import { updateDocument } from '@/app/wiki/actions'
 import MarkdownEditor from '@/components/MarkdownEditor'
@@ -16,7 +16,7 @@ interface Props {
 const initialState = { error: '' }
 
 export default function EditForm({ documentId, title, initialContent, updatedAt }: Props) {
-  const [state, formAction] = useFormState(updateDocument, initialState)
+  const [state, formAction] = useActionState(updateDocument, initialState)
 
   return (
     <form action={formAction} className="wiki-form">

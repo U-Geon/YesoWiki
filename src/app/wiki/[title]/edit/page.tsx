@@ -3,11 +3,11 @@ import { db } from '@/lib/prisma'
 import EditForm from './EditForm'
 
 interface Props {
-  params: { title: string }
+  params: Promise<{ title: string }>
 }
 
 export default async function EditPage({ params }: Props) {
-  const { title } = params
+  const { title } = await params
   let decodedTitle = ''
   try {
     decodedTitle = decodeURIComponent(title)
