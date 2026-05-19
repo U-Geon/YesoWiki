@@ -47,7 +47,7 @@ export default async function EditPage({ params }: Props) {
         </h1>
       </div>
 
-      <EditForm documentId={doc.id} title={doc.title} initialContent={doc.content} />
+      <EditForm documentId={doc.id} title={doc.title} initialContent={doc.content} updatedAt={doc.updatedAt.toISOString()} />
     </div>
   )
 }

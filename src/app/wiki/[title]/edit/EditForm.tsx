@@ -10,16 +10,19 @@ interface Props {
   documentId: number
   title: string
   initialContent: string
+  updatedAt: string
 }
 
 const initialState = { error: '' }
 
-export default function EditForm({ documentId, title, initialContent }: Props) {
+export default function EditForm({ documentId, title, initialContent, updatedAt }: Props) {
   const [state, formAction] = useFormState(updateDocument, initialState)
 
   return (
     <form action={formAction} className="wiki-form">
       <input type="hidden" name="documentId" value={documentId} />
+      {/* OCC: 폼을 열었을 때의 버전을 서버로 전송하여 충돌을 감지합니다 */}
+      <input type="hidden" name="updatedAt" value={updatedAt} />
 
       {state?.error && <div className="form-error">{state.error}</div>}
 

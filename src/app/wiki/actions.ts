@@ -14,6 +14,12 @@ export interface ActionResult {
   error?: string
 }
 
+// ─── 상수 ────────────────────────────────────────────────────────────────────
+
+const MAX_TITLE_LENGTH = 100      // 문서 제목 최대 글자 수
+const MAX_CONTENT_LENGTH = 100_000 // 문서 본문 최대 글자 수 (10만 자)
+const MAX_EDITOR_NAME_LENGTH = 30  // 닉네임 최대 글자 수
+
 // ─── 문서 생성 ────────────────────────────────────────────────────────────────
 
 export async function createDocument(
@@ -24,9 +30,15 @@ export async function createDocument(
   const content = (formData.get('content') as string)?.trim()
   const editorName = (formData.get('editorName') as string)?.trim() || null
 
-  // 유효성 검사
+  // ── 서버 사이드 유효성 검사 ──────────────────────────
   if (!title) return { error: '문서 제목은 필수입니다.' }
+  if (title.length > MAX_TITLE_LENGTH)
+    return { error: `문서 제목은 ${MAX_TITLE_LENGTH}자 이하여야 합니다.` }
   if (!content) return { error: '문서 내용은 필수입니다.' }
+  if (content.length > MAX_CONTENT_LENGTH)
+    return { error: `문서 내용은 ${MAX_CONTENT_LENGTH.toLocaleString()}자 이하여야 합니다.` }
+  if (editorName && editorName.length > MAX_EDITOR_NAME_LENGTH)
+    return { error: `닉네임은 ${MAX_EDITOR_NAME_LENGTH}자 이하여야 합니다.` }
 
   // 서버에서 IP 추출 (x-real-ip 우선, 그 다음 x-forwarded-for의 가장 우측 값)
   const headersList = await headers()
@@ -72,7 +84,18 @@ export async function updateDocument(
   const newContent = (formData.get('content') as string)?.trim()
   const editorName = (formData.get('editorName') as string)?.trim() || null
 
+  // ── 서버 사이드 유효성 검사 ──────────────────────────
   if (!newContent) return { error: '문서 내용은 필수입니다.' }
+  if (newContent.length > MAX_CONTENT_LENGTH)
+    return { error: `문서 내용은 ${MAX_CONTENT_LENGTH.toLocaleString()}자 이하여야 합니다.` }
+  if (editorName && editorName.length > MAX_EDITOR_NAME_LENGTH)
+    return { error: `닉네임은 ${MAX_EDITOR_NAME_LENGTH}자 이하여야 합니다.` }
+
+  // ── Optimistic Concurrency Control ──────────────────
+  // 클라이언트가 폼을 열었을 때의 updatedAt 을 함께 전송합니다.
+  // 서버의 현재 updatedAt 과 다르면 그 사이에 다른 사용자가 수정한 것이므로 차단합니다.
+  const rawUpdatedAt = formData.get('updatedAt') as string | null
+  const clientUpdatedAt = rawUpdatedAt ? new Date(rawUpdatedAt) : null
 
   const headersList = await headers()
   const editorIp =
@@ -86,6 +109,14 @@ export async function updateDocument(
     if (!existing) return { error: '문서를 찾을 수 없습니다.' }
 
     existingTitle = existing.title
+
+    // OCC 충돌 감지: 클라이언트가 보낸 updatedAt 과 DB 의 updatedAt 이 다르면 차단
+    if (clientUpdatedAt && existing.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
+      return {
+        error:
+          '다른 사용자가 이미 이 문서를 수정했습니다. 페이지를 새로고침한 후 다시 시도해 주세요.',
+      }
+    }
 
     // 트랜잭션: 히스토리 백업 → 본문 업데이트 (원자적 실행)
     await db.$transaction([
