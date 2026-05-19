@@ -113,7 +113,7 @@ export async function updateDocument(
     existingTitle = existing.title
 
     // OCC 충돌 감지: 클라이언트가 보낸 updatedAt 과 DB 의 updatedAt 이 다르면 차단
-    if (clientUpdatedAt && existing.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
+    if (existing.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
       return {
         error:
           '다른 사용자가 이미 이 문서를 수정했습니다. 페이지를 새로고침한 후 다시 시도해 주세요.',
