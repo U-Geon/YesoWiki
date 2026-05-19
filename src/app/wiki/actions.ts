@@ -95,7 +95,9 @@ export async function updateDocument(
   // 클라이언트가 폼을 열었을 때의 updatedAt 을 함께 전송합니다.
   // 서버의 현재 updatedAt 과 다르면 그 사이에 다른 사용자가 수정한 것이므로 차단합니다.
   const rawUpdatedAt = formData.get('updatedAt') as string | null
-  const clientUpdatedAt = rawUpdatedAt ? new Date(rawUpdatedAt) : null
+  if (!rawUpdatedAt) return { error: '잘못된 요청입니다. (버전 정보 누락)' }
+  const clientUpdatedAt = new Date(rawUpdatedAt)
+  if (isNaN(clientUpdatedAt.getTime())) return { error: '잘못된 요청입니다. (유효하지 않은 날짜)' }
 
   const headersList = await headers()
   const editorIp =
