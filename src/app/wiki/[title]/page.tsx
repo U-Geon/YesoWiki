@@ -7,11 +7,11 @@ import { parseBacklinksWithExistence, extractBacklinkTitles } from '@/lib/backli
 import MarkdownRenderer from '@/components/MarkdownRenderer'
 
 interface Props {
-  params: { title: string }
+  params: Promise<{ title: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { title } = params
+  const { title } = await params
   let decodedTitle = title
   try {
     decodedTitle = decodeURIComponent(title)
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function WikiDetailPage({ params }: Props) {
-  const { title } = params
+  const { title } = await params
   let decodedTitle = ''
   try {
     decodedTitle = decodeURIComponent(title)

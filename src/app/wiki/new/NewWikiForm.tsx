@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useFormState } from 'react-dom'
+import { useActionState } from 'react'
 
 import { createDocument } from '@/app/wiki/actions'
 import MarkdownEditor from '@/components/MarkdownEditor'
@@ -10,7 +10,7 @@ import SubmitButton from '@/components/SubmitButton'
 const initialState = { error: '' }
 
 export default function NewWikiForm() {
-  const [state, formAction] = useFormState(createDocument, initialState)
+  const [state, formAction] = useActionState(createDocument, initialState)
 
   return (
     <form action={formAction} className="wiki-form">
