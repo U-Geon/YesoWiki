@@ -5,19 +5,15 @@
 
 ## 현재 프로젝트 상태 (Current Phase)
 
-- **Phase**: Phase 2 버그 수정 및 인프라 최적화 완료 → 다음 이슈 선정 필요
-- **현재 브랜치**: `fix/011-premium-ui-bugs` (PR → develop 머지 대기 중)
+- **Phase**: Phase 3 진입 (위키 시스템 고도화 및 안정성 확보)
+- **현재 브랜치**: `develop`
 - **진행 상황**:
   - ✅ Phase 0: 멀티 에이전트 시스템 구축 완료
   - ✅ Phase 1: 위키 CRUD, 백링크, 마크다운 에디터 툴바 완료 → `develop` 통합
-  - ✅ Phase 2 (#005): 프리미엄 UI/UX 전역 리디자인 완료 → `develop` 통합 (PR #23)
-    - ThemeProvider, Header 컴포넌트 신설
-    - 다크/라이트 모드 CSS 변수 기반 테마 시스템
-    - 홈 랜딩 페이지, 문서 목록/상세/폼 전면 리디자인
-    - CSS !important 제거, 히어로 그라디언트 CSS 변수화
-    - 에이전트 파이프라인 문서 (FEATURE_SPEC, ERD, roles) 전면 갱신
-  - ✅ #011 (bug): 취소 버튼 패딩 추가, 라이트모드 FOUC 해결 → 머지 대기
-  - ✅ #012 (infra): 코드 리뷰 에이전트 CodeRabbit → Gemini Code Assist 마이그레이션 완료 → `develop` 통합 (PR #26)
+  - ✅ Phase 2 (#005, #011, #012): 프리미엄 UI 리디자인, FOUC 버그 수정 및 인프라(Gemini) 마이그레이션 완료 → `main` 배포 완료
+  - 🔜 Phase 3 (#013): 기술적 보안 및 안정성 확보 (XSS 방어, 동시성 제어, Rate Limiting)
+  - 🔜 Phase 3 (#014): 위키 핵심 기획 추가 (문서 히스토리, 최근 변경, 관리자 권한)
+  - 🔜 Phase 3 (#015): 성능 및 UX 최적화 (본문 검색, 자동 목차)
 
 ## 시스템 학습 및 아키텍처 결정 사항 (Learnings & Decisions)
 
